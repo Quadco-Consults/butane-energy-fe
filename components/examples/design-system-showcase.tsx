@@ -18,7 +18,8 @@ import {
   ComingSoonCard
 } from "@/components/ui/layout-cards";
 import { DataTable, TableColumn, StatusCell, DateCell, CurrencyCell } from "@/components/ui/data-table";
-import { useToast, Notification } from "@/components/ui/toast";
+// import { useToast, Notification } from "@/components/ui/toast";
+import { Notification } from "@/components/ui/toast";
 import { designSystem } from "@/lib/design-system";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -101,7 +102,11 @@ const tableColumns: TableColumn[] = [
 ];
 
 export default function DesignSystemShowcase() {
-  const { success, error, warning, info } = useToast();
+  // Temporary toast replacement
+  const success = (message: string) => alert(`Success: ${message}`);
+  const error = (message: string) => alert(`Error: ${message}`);
+  const warning = (message: string) => alert(`Warning: ${message}`);
+  const info = (message: string) => alert(`Info: ${message}`);
   const [showNotification, setShowNotification] = React.useState(false);
 
   // Form validation example

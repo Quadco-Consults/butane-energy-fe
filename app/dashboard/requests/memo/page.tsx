@@ -1,18 +1,18 @@
 "use client";
 
+import React from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { StatsCard, ListCard, DataTableHeader } from "@/components/ui/layout-cards";
-import { DataTable, TableColumn, StatusCell, DateCell, CurrencyCell, ActionCell } from "@/components/ui/data-table";
+import { DataTable, TableColumn, StatusCell, DateCell, ActionCell } from "@/components/ui/data-table";
 import { FormModal, FormField, useFormValidation, validationRules } from "@/components/ui/form-components";
-// import { useToast } from "@/components/ui/toast";
 import { designSystem } from "@/lib/design-system";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
-  ShoppingCart,
-  DollarSign,
+  FileEdit,
+  Send,
   Clock,
   CheckCircle,
   AlertTriangle,
@@ -20,130 +20,139 @@ import {
   Eye,
   Edit,
   Download,
-  FileText
 } from "lucide-react";
-import React from "react";
 
-// Sample data for purchase orders
-const purchaseOrderStats = [
+// Sample data for memos
+const memoStats = [
   {
-    title: "Total Purchase Orders",
-    value: "234",
+    title: "Total Memos",
+    value: "156",
     description: "All time",
-    icon: <ShoppingCart className="h-8 w-8" />
+    icon: <FileEdit className="h-8 w-8" />
   },
   {
     title: "Pending Approval",
-    value: "12",
+    value: "8",
     description: "Awaiting review",
     icon: <Clock className="h-8 w-8" />
   },
   {
     title: "Approved This Month",
-    value: "45",
+    value: "23",
     description: "Current month",
-    trend: { value: "+8%", isPositive: true },
+    trend: { value: "+12%", isPositive: true },
     icon: <CheckCircle className="h-8 w-8" />
   },
   {
-    title: "Total Value",
-    value: "$1.2M",
-    description: "This quarter",
-    trend: { value: "+15%", isPositive: true },
-    icon: <DollarSign className="h-8 w-8" />
+    title: "Urgent Memos",
+    value: "3",
+    description: "High priority",
+    icon: <AlertTriangle className="h-8 w-8" />
   }
 ];
 
-const purchaseOrdersData = [
+const memosData = [
   {
-    id: "PO-2024-001",
-    poNumber: "PO-2024-001",
-    supplier: "TechCorp Ltd",
-    department: "IT",
-    description: "Computer equipment and accessories",
-    amount: 15234.50,
-    status: "approved",
+    id: "MEM-2024-001",
+    memoNumber: "MEM-2024-001",
+    subject: "Office Policy Update - Remote Work Guidelines",
+    recipient: "All Staff",
+    department: "HR",
     priority: "high",
-    requestedBy: "John Smith",
+    status: "approved",
+    requestedBy: "Khadija Yusuf",
     date: "2024-01-15",
-    dueDate: "2024-02-15",
-    approvedBy: "Jane Doe"
+    dueDate: "2024-01-20",
+    approvedBy: "Musa Garba"
   },
   {
-    id: "PO-2024-002",
-    poNumber: "PO-2024-002",
-    supplier: "BuildCorp Inc",
-    department: "Facilities",
-    description: "Construction materials for office renovation",
-    amount: 45890.00,
+    id: "MEM-2024-002",
+    memoNumber: "MEM-2024-002",
+    subject: "Budget Allocation for Q2 2024 Operations",
+    recipient: "Finance Team",
+    department: "Finance",
+    priority: "medium",
     status: "pending",
-    priority: "medium",
-    requestedBy: "Mike Johnson",
+    requestedBy: "Emeka Okafor",
     date: "2024-01-12",
-    dueDate: "2024-02-12"
+    dueDate: "2024-01-25"
   },
   {
-    id: "PO-2024-003",
-    poNumber: "PO-2024-003",
-    supplier: "OfficeSupply Co",
-    department: "Admin",
-    description: "Office supplies and stationery",
-    amount: 2340.75,
-    status: "approved",
-    priority: "low",
-    requestedBy: "Sarah Wilson",
-    date: "2024-01-10",
-    dueDate: "2024-01-25",
-    approvedBy: "Bob Smith"
-  },
-  {
-    id: "PO-2024-004",
-    poNumber: "PO-2024-004",
-    supplier: "SafetyFirst Ltd",
+    id: "MEM-2024-003",
+    memoNumber: "MEM-2024-003",
+    subject: "Safety Protocol Enhancement - LPG Handling",
+    recipient: "Operations Team",
     department: "Operations",
-    description: "Safety equipment and protective gear",
-    amount: 8750.00,
-    status: "draft",
     priority: "high",
-    requestedBy: "Tom Brown",
-    date: "2024-01-08",
-    dueDate: "2024-01-30"
+    status: "approved",
+    requestedBy: "Ahmed Mohammed",
+    date: "2024-01-10",
+    dueDate: "2024-01-15",
+    approvedBy: "Musa Garba"
   },
   {
-    id: "PO-2024-005",
-    poNumber: "PO-2024-005",
-    supplier: "EnergyTech Solutions",
-    department: "Engineering",
-    description: "Industrial equipment maintenance",
-    amount: 32500.00,
-    status: "rejected",
+    id: "MEM-2024-004",
+    memoNumber: "MEM-2024-004",
+    subject: "Procurement Guidelines Update",
+    recipient: "Procurement Department",
+    department: "Procurement",
     priority: "medium",
-    requestedBy: "Lisa Anderson",
+    status: "draft",
+    requestedBy: "Grace Adebayo",
+    date: "2024-01-08",
+    dueDate: "2024-01-18"
+  },
+  {
+    id: "MEM-2024-005",
+    memoNumber: "MEM-2024-005",
+    subject: "Vehicle Maintenance Schedule Changes",
+    recipient: "Logistics Team",
+    department: "Operations",
+    priority: "low",
+    status: "rejected",
+    requestedBy: "Ibrahim Usman",
     date: "2024-01-05",
-    dueDate: "2024-02-05"
+    dueDate: "2024-01-12"
   }
 ];
 
-const suppliers = ["TechCorp Ltd", "BuildCorp Inc", "OfficeSupply Co", "SafetyFirst Ltd", "EnergyTech Solutions"];
-const departments = ["IT", "Facilities", "Admin", "Operations", "Engineering", "HR", "Finance"];
-const priorities = ["low", "medium", "high"];
+const departments = ["HR", "Finance", "Operations", "Procurement", "Admin", "Trading", "Logistics"];
+const priorities = ["low", "medium", "high", "urgent"];
+const recipients = [
+  "All Staff",
+  "Finance Team",
+  "Operations Team",
+  "Procurement Department",
+  "HR Department",
+  "Management Team",
+  "Specific Employee"
+];
 
 const tableColumns: TableColumn[] = [
   {
-    id: "poNumber",
-    header: "PO Number",
-    accessorKey: "poNumber",
+    id: "memoNumber",
+    header: "Memo Number",
+    accessorKey: "memoNumber",
     sortable: true,
     cell: (row) => (
       <div className="font-medium text-blue-600">
-        {row.poNumber}
+        {row.memoNumber}
       </div>
     )
   },
   {
-    id: "supplier",
-    header: "Supplier",
-    accessorKey: "supplier",
+    id: "subject",
+    header: "Subject",
+    cell: (row) => (
+      <div className="max-w-xs truncate" title={row.subject}>
+        {row.subject}
+      </div>
+    )
+  },
+  {
+    id: "recipient",
+    header: "Recipient",
+    accessorKey: "recipient",
     sortable: true
   },
   {
@@ -153,25 +162,11 @@ const tableColumns: TableColumn[] = [
     sortable: true
   },
   {
-    id: "description",
-    header: "Description",
-    cell: (row) => (
-      <div className="max-w-xs truncate" title={row.description}>
-        {row.description}
-      </div>
-    )
-  },
-  {
-    id: "amount",
-    header: "Amount",
-    cell: (row) => <CurrencyCell amount={row.amount} />
-  },
-  {
     id: "priority",
     header: "Priority",
     cell: (row) => (
       <span className={designSystem.getBadge(
-        row.priority === 'high' ? 'rejected' :
+        row.priority === 'urgent' || row.priority === 'high' ? 'rejected' :
         row.priority === 'medium' ? 'pending' : 'approved'
       )}>
         {row.priority}
@@ -199,36 +194,37 @@ const tableColumns: TableColumn[] = [
   }
 ];
 
-export default function PurchaseOrdersPage() {
+export default function MemoRequestPage() {
   const { user } = useAuth();
   // Temporary toast replacement
   const success = (message: string) => alert(`Success: ${message}`);
   const error = (message: string) => alert(`Error: ${message}`);
-  const [selectedPOs, setSelectedPOs] = React.useState<string[]>([]);
+  const [selectedMemos, setSelectedMemos] = React.useState<string[]>([]);
 
-  // Form validation for new purchase order
+  // Form validation for new memo
   const { values, errors, setValue, validate, reset } = useFormValidation(
     {
-      supplier: '',
+      subject: '',
+      recipient: '',
       department: '',
-      description: '',
-      amount: '',
       priority: 'medium',
-      dueDate: ''
+      dueDate: '',
+      content: '',
+      cc: ''
     },
     {
-      supplier: validationRules.required,
+      subject: validationRules.required,
+      recipient: validationRules.required,
       department: validationRules.required,
-      description: validationRules.required,
-      amount: (value) => validationRules.required(value) || validationRules.positiveNumber(value),
+      content: validationRules.required,
       dueDate: validationRules.required
     }
   );
 
-  const handleCreatePO = (e: React.FormEvent) => {
+  const handleCreateMemo = (e: React.FormEvent) => {
     e.preventDefault();
     if (validate()) {
-      success("Purchase Order created successfully!");
+      success("Memo created successfully and sent for approval!");
       reset();
     } else {
       error("Please fill all required fields");
@@ -236,16 +232,16 @@ export default function PurchaseOrdersPage() {
   };
 
   const handleBulkApprove = () => {
-    if (selectedPOs.length === 0) {
-      error("Please select purchase orders to approve");
+    if (selectedMemos.length === 0) {
+      error("Please select memos to approve");
       return;
     }
-    success(`${selectedPOs.length} purchase order(s) approved`);
-    setSelectedPOs([]);
+    success(`${selectedMemos.length} memo(s) approved`);
+    setSelectedMemos([]);
   };
 
   const handleExport = () => {
-    success("Purchase orders exported to CSV");
+    success("Memos exported to PDF");
   };
 
   if (!user) return null;
@@ -254,15 +250,15 @@ export default function PurchaseOrdersPage() {
     <div className="space-y-6">
       {/* Page Header */}
       <div>
-        <h1 className={designSystem.getHeading("h1")}>Purchase Orders</h1>
+        <h1 className={designSystem.getHeading("h1")}>Memo Requests</h1>
         <p className={designSystem.getBody("small")}>
-          Create, track, and manage purchase orders for all departments
+          Create, send, and manage official memos and communications
         </p>
       </div>
 
       {/* Stats Cards */}
       <div className={designSystem.getGrid("cols4")}>
-        {purchaseOrderStats.map((stat, index) => (
+        {memoStats.map((stat, index) => (
           <StatsCard key={index} {...stat} />
         ))}
       </div>
@@ -270,47 +266,40 @@ export default function PurchaseOrdersPage() {
       {/* Quick Actions & Filters */}
       <section className="space-y-4">
         <DataTableHeader
-          title="All Purchase Orders"
-          description="Complete list of purchase orders across all departments"
-          searchPlaceholder="Search by PO number, supplier, or description..."
+          title="All Memos"
+          description="Complete list of memos and official communications"
+          searchPlaceholder="Search by memo number, subject, or recipient..."
           onSearch={(value) => console.log("Search:", value)}
-          onRefresh={() => success("Purchase orders refreshed")}
+          onRefresh={() => success("Memos refreshed")}
           onExport={handleExport}
           actions={
             <div className="flex space-x-2">
-              {selectedPOs.length > 0 && (
+              {selectedMemos.length > 0 && (
                 <Button variant="outline" onClick={handleBulkApprove}>
                   <CheckCircle className="h-4 w-4 mr-2" />
-                  Approve Selected ({selectedPOs.length})
+                  Approve Selected ({selectedMemos.length})
                 </Button>
               )}
               <FormModal
-                title="Create New Purchase Order"
-                description="Fill out the details to create a new purchase order"
+                title="Create New Memo"
+                description="Create a new official memo or communication"
                 trigger={
                   <Button>
                     <Plus className="h-4 w-4 mr-2" />
-                    New Purchase Order
+                    New Memo
                   </Button>
                 }
-                onSubmit={handleCreatePO}
-                submitLabel="Create PO"
+                onSubmit={handleCreateMemo}
+                submitLabel="Send Memo"
                 size="lg"
               >
                 <div className="grid grid-cols-2 gap-4">
-                  <FormField label="Supplier" required error={errors.supplier}>
-                    <Select value={values.supplier} onValueChange={(value) => setValue('supplier', value)}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select supplier" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {suppliers.map((supplier) => (
-                          <SelectItem key={supplier} value={supplier}>
-                            {supplier}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                  <FormField label="Subject" required error={errors.subject}>
+                    <Input
+                      value={values.subject}
+                      onChange={(e) => setValue('subject', e.target.value)}
+                      placeholder="Enter memo subject"
+                    />
                   </FormField>
 
                   <FormField label="Department" required error={errors.department}>
@@ -329,25 +318,20 @@ export default function PurchaseOrdersPage() {
                   </FormField>
                 </div>
 
-                <FormField label="Description" required error={errors.description}>
-                  <Textarea
-                    value={values.description}
-                    onChange={(e) => setValue('description', e.target.value)}
-                    placeholder="Describe the items or services being purchased"
-                    rows={3}
-                  />
-                </FormField>
-
                 <div className="grid grid-cols-2 gap-4">
-                  <FormField label="Amount" required error={errors.amount}>
-                    <Input
-                      type="number"
-                      value={values.amount}
-                      onChange={(e) => setValue('amount', e.target.value)}
-                      placeholder="0.00"
-                      min="0"
-                      step="0.01"
-                    />
+                  <FormField label="Recipient" required error={errors.recipient}>
+                    <Select value={values.recipient} onValueChange={(value) => setValue('recipient', value)}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select recipient" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {recipients.map((recipient) => (
+                          <SelectItem key={recipient} value={recipient}>
+                            {recipient}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </FormField>
 
                   <FormField label="Priority" required>
@@ -366,6 +350,14 @@ export default function PurchaseOrdersPage() {
                   </FormField>
                 </div>
 
+                <FormField label="CC (Optional)">
+                  <Input
+                    value={values.cc}
+                    onChange={(e) => setValue('cc', e.target.value)}
+                    placeholder="Copy other recipients (comma separated)"
+                  />
+                </FormField>
+
                 <FormField label="Due Date" required error={errors.dueDate}>
                   <Input
                     type="date"
@@ -373,19 +365,28 @@ export default function PurchaseOrdersPage() {
                     onChange={(e) => setValue('dueDate', e.target.value)}
                   />
                 </FormField>
+
+                <FormField label="Memo Content" required error={errors.content}>
+                  <Textarea
+                    value={values.content}
+                    onChange={(e) => setValue('content', e.target.value)}
+                    placeholder="Write the memo content here..."
+                    rows={6}
+                  />
+                </FormField>
               </FormModal>
             </div>
           }
         />
 
-        {/* Purchase Orders Table */}
+        {/* Memos Table */}
         <DataTable
-          data={purchaseOrdersData}
+          data={memosData}
           columns={tableColumns}
           pagination={{
             page: 1,
             pageSize: 10,
-            total: purchaseOrdersData.length,
+            total: memosData.length,
             onPageChange: (page) => console.log("Page:", page),
             onPageSizeChange: (size) => console.log("Page size:", size)
           }}
@@ -395,19 +396,19 @@ export default function PurchaseOrdersPage() {
             onSortChange: (column, direction) => console.log("Sort:", column, direction)
           }}
           selection={{
-            selectedRows: selectedPOs,
+            selectedRows: selectedMemos,
             onRowSelect: (id) => {
-              setSelectedPOs(prev =>
+              setSelectedMemos(prev =>
                 prev.includes(id)
                   ? prev.filter(item => item !== id)
                   : [...prev, id]
               );
             },
             onSelectAll: () => {
-              setSelectedPOs(prev =>
-                prev.length === purchaseOrdersData.length
+              setSelectedMemos(prev =>
+                prev.length === memosData.length
                   ? []
-                  : purchaseOrdersData.map(po => po.id)
+                  : memosData.map(memo => memo.id)
               );
             }
           }}
@@ -417,18 +418,18 @@ export default function PurchaseOrdersPage() {
                 actions={[
                   {
                     label: "View",
-                    onClick: () => success(`Viewing ${row.poNumber}`),
+                    onClick: () => success(`Viewing ${row.memoNumber}`),
                     variant: "outline"
                   },
                   {
                     label: "Edit",
-                    onClick: () => success(`Editing ${row.poNumber}`),
+                    onClick: () => success(`Editing ${row.memoNumber}`),
                     variant: "outline"
                   }
                 ]}
               />
             ),
-            bulk: selectedPOs.length > 0 ? (
+            bulk: selectedMemos.length > 0 ? (
               <div className="flex space-x-2">
                 <Button variant="outline" size="sm" onClick={handleBulkApprove}>
                   <CheckCircle className="h-4 w-4 mr-1" />
@@ -442,11 +443,11 @@ export default function PurchaseOrdersPage() {
             ) : undefined
           }}
           emptyState={{
-            message: "No purchase orders found",
+            message: "No memos found",
             action: (
-              <Button onClick={() => success("Creating first purchase order...")}>
+              <Button onClick={() => success("Creating first memo...")}>
                 <Plus className="h-4 w-4 mr-2" />
-                Create First Purchase Order
+                Create First Memo
               </Button>
             )
           }}
@@ -455,19 +456,19 @@ export default function PurchaseOrdersPage() {
 
       {/* Recent Activity Summary */}
       <section className="space-y-4">
-        <h2 className={designSystem.getHeading("h3")}>Recent Purchase Order Activity</h2>
+        <h2 className={designSystem.getHeading("h3")}>Recent Memo Activity</h2>
 
         <ListCard
           title="Latest Updates"
           items={[
             {
               id: "1",
-              title: "PO-2024-001 - Computer Equipment",
-              description: "Approved by Jane Doe • TechCorp Ltd • $15,234.50",
+              title: "MEM-2024-001 - Office Policy Update",
+              description: "Approved by Musa Garba • HR Department • High Priority",
               status: { label: "Approved", variant: "default" },
               metadata: [
-                { label: "Department", value: "IT" },
-                { label: "Due", value: "Feb 15, 2024" }
+                { label: "Recipient", value: "All Staff" },
+                { label: "Due", value: "Jan 20, 2024" }
               ],
               actions: (
                 <div className="flex space-x-1">
@@ -475,19 +476,19 @@ export default function PurchaseOrdersPage() {
                     <Eye className="h-3 w-3" />
                   </Button>
                   <Button size="sm" variant="ghost">
-                    <Download className="h-3 w-3" />
+                    <Send className="h-3 w-3" />
                   </Button>
                 </div>
               )
             },
             {
               id: "2",
-              title: "PO-2024-002 - Construction Materials",
-              description: "Pending approval • BuildCorp Inc • $45,890.00",
+              title: "MEM-2024-002 - Budget Allocation Q2 2024",
+              description: "Pending approval • Finance Department • Medium Priority",
               status: { label: "Pending", variant: "secondary" },
               metadata: [
-                { label: "Department", value: "Facilities" },
-                { label: "Due", value: "Feb 12, 2024" }
+                { label: "Recipient", value: "Finance Team" },
+                { label: "Due", value: "Jan 25, 2024" }
               ],
               actions: (
                 <div className="flex space-x-1">
@@ -504,8 +505,8 @@ export default function PurchaseOrdersPage() {
           emptyState={{
             message: "No recent activity",
             action: {
-              label: "Create Purchase Order",
-              onClick: () => success("Creating new purchase order...")
+              label: "Create Memo",
+              onClick: () => success("Creating new memo...")
             }
           }}
         />

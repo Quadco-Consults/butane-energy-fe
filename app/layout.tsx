@@ -4,6 +4,7 @@ import "./globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ERPProvider } from "@/contexts/ERPContext";
 import { WorkflowProvider } from "@/contexts/WorkflowContext";
+// import { ToastProvider } from "@/components/ui/toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,7 +41,9 @@ export default function RootLayout({
         <AuthProvider>
           <ERPProvider>
             <WorkflowProvider>
-              {children}
+              {/* <ToastProvider> */}
+                {children}
+              {/* </ToastProvider> */}
             </WorkflowProvider>
           </ERPProvider>
         </AuthProvider>

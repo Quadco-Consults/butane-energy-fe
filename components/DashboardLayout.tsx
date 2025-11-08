@@ -4,32 +4,7 @@ import React, { useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useWorkflow } from "@/contexts/WorkflowContext";
 import { useRouter, usePathname } from "next/navigation";
-import {
-  LayoutDashboard,
-  Package,
-  ShoppingCart,
-  Users,
-  Building2,
-  BarChart3,
-  Settings,
-  LogOut,
-  Truck,
-  ClipboardCheck,
-  Briefcase,
-  Bell,
-  Search,
-  FileText,
-  TrendingUp,
-  DollarSign,
-  UserCog,
-  Calendar,
-  Clock,
-  Wrench,
-  FileEdit,
-  Send,
-  ChevronDown,
-  ChevronRight,
-} from "lucide-react";
+import * as Icons from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
@@ -55,94 +30,94 @@ import { getAuthorizedNavigation } from "@/lib/filters";
 const departmentMenus = [
   {
     name: "Procurement",
-    icon: ClipboardCheck,
+    icon: Icons.ClipboardCheck,
     permission: "create_purchase_requests" as const,
     department: "procurement",
     subItems: [
-      { name: "Procurement Dashboard", href: "/dashboard/procurement", icon: LayoutDashboard },
-      { name: "Tenders", href: "/dashboard/procurement/tenders", icon: FileText },
-      { name: "RFQ Management", href: "/dashboard/procurement/rfq", icon: Search },
-      { name: "Purchase Orders", href: "/dashboard/procurement/purchase-orders", icon: ShoppingCart },
-      { name: "Vendor Management", href: "/dashboard/procurement/vendors", icon: Users },
+      { name: "Procurement Dashboard", href: "/dashboard/procurement", icon: Icons.LayoutDashboard },
+      { name: "Tenders", href: "/dashboard/procurement/tenders", icon: Icons.FileText },
+      { name: "RFQ Management", href: "/dashboard/procurement/rfq", icon: Icons.Search },
+      { name: "Purchase Orders", href: "/dashboard/procurement/purchase-orders", icon: Icons.ShoppingCart },
+      { name: "Vendor Management", href: "/dashboard/procurement/vendors", icon: Icons.Users },
     ]
   },
   {
     name: "Admin",
-    icon: Briefcase,
+    icon: Icons.Briefcase,
     permission: "manage_admin_operations" as const,
     department: "admin",
     subItems: [
-      { name: "Admin Dashboard", href: "/dashboard/admin", icon: LayoutDashboard },
-      { name: "Inhouse Store", href: "/dashboard/admin/store", icon: Package },
-      { name: "Item Requests", href: "/dashboard/admin/item-requests", icon: FileEdit },
-      { name: "Office Maintenance", href: "/dashboard/admin/maintenance", icon: Wrench },
-      { name: "Facility Management", href: "/dashboard/admin/facility", icon: Building2 },
-      { name: "Service Orders", href: "/dashboard/admin/service-orders", icon: Settings },
+      { name: "Admin Dashboard", href: "/dashboard/admin", icon: Icons.LayoutDashboard },
+      { name: "Inhouse Store", href: "/dashboard/admin/store", icon: Icons.Package },
+      { name: "Item Requests", href: "/dashboard/admin/item-requests", icon: Icons.FileEdit },
+      { name: "Office Maintenance", href: "/dashboard/admin/maintenance", icon: Icons.Wrench },
+      { name: "Facility Management", href: "/dashboard/admin/facility", icon: Icons.Building2 },
+      { name: "Service Orders", href: "/dashboard/admin/service-orders", icon: Icons.Settings },
     ]
   },
   {
     name: "Operations",
-    icon: Package,
+    icon: Icons.Package,
     permission: "manage_inbound_operations" as const,
     department: "operations",
     subItems: [
-      { name: "Operations Dashboard", href: "/dashboard/operations", icon: LayoutDashboard },
-      { name: "Trading", href: "/dashboard/operations/trading", icon: TrendingUp },
-      { name: "Logistics", href: "/dashboard/operations/logistics", icon: Truck },
-      { name: "LPG Sales Process", href: "/dashboard/operations/trading/sales", icon: DollarSign },
-      { name: "Stock Management", href: "/dashboard/operations/trading/stock", icon: Package },
-      { name: "Truck Dispatching", href: "/dashboard/operations/logistics/offtake", icon: Truck },
-      { name: "Investigations", href: "/dashboard/investigations", icon: Search },
+      { name: "Operations Dashboard", href: "/dashboard/operations", icon: Icons.LayoutDashboard },
+      { name: "Trading", href: "/dashboard/operations/trading", icon: Icons.TrendingUp },
+      { name: "Logistics", href: "/dashboard/operations/logistics", icon: Icons.Truck },
+      { name: "LPG Sales Process", href: "/dashboard/operations/trading/sales", icon: Icons.DollarSign },
+      { name: "Stock Management", href: "/dashboard/operations/trading/stock", icon: Icons.Package },
+      { name: "Truck Dispatching", href: "/dashboard/operations/logistics/offtake", icon: Icons.Truck },
+      { name: "Investigations", href: "/dashboard/investigations", icon: Icons.Search },
     ]
   },
   {
     name: "Finance",
-    icon: DollarSign,
+    icon: Icons.DollarSign,
     permission: "view_financial_reports" as const,
     department: "finance",
     subItems: [
-      { name: "Finance Dashboard", href: "/dashboard/finance", icon: LayoutDashboard },
-      { name: "Purchase Process", href: "/dashboard/finance/purchase", icon: ShoppingCart },
-      { name: "Imprest Process", href: "/dashboard/finance/imprest", icon: UserCog },
-      { name: "Profit & Loss", href: "/dashboard/finance/profit-loss", icon: TrendingUp },
-      { name: "Balance Sheet", href: "/dashboard/finance/balance-sheet", icon: BarChart3 },
-      { name: "Trial Balance", href: "/dashboard/finance/trial-balance", icon: FileText },
-      { name: "Accounts P/R", href: "/dashboard/finance/accounts", icon: Users },
-      { name: "Financial Reports", href: "/dashboard/finance/reports", icon: FileText },
+      { name: "Finance Dashboard", href: "/dashboard/finance", icon: Icons.LayoutDashboard },
+      { name: "Purchase Process", href: "/dashboard/finance/purchase", icon: Icons.ShoppingCart },
+      { name: "Imprest Process", href: "/dashboard/finance/imprest", icon: Icons.UserCog },
+      { name: "Profit & Loss", href: "/dashboard/finance/profit-loss", icon: Icons.TrendingUp },
+      { name: "Balance Sheet", href: "/dashboard/finance/balance-sheet", icon: Icons.BarChart3 },
+      { name: "Trial Balance", href: "/dashboard/finance/trial-balance", icon: Icons.FileText },
+      { name: "Accounts P/R", href: "/dashboard/finance/accounts", icon: Icons.Users },
+      { name: "Financial Reports", href: "/dashboard/finance/reports", icon: Icons.FileText },
     ]
   },
   {
     name: "HR",
-    icon: Users,
+    icon: Icons.Users,
     permission: "manage_employees" as const,
     department: "hr",
     subItems: [
-      { name: "HR Dashboard", href: "/dashboard/hr", icon: LayoutDashboard },
-      { name: "Employee Management", href: "/dashboard/hr/employees", icon: Users },
-      { name: "Leave Management", href: "/dashboard/hr/leave", icon: Calendar },
-      { name: "Payroll", href: "/dashboard/hr/payroll", icon: DollarSign },
-      { name: "Training", href: "/dashboard/hr/training", icon: FileText },
-      { name: "Performance", href: "/dashboard/hr/performance", icon: BarChart3 },
+      { name: "HR Dashboard", href: "/dashboard/hr", icon: Icons.LayoutDashboard },
+      { name: "Employee Management", href: "/dashboard/hr/employees", icon: Icons.Users },
+      { name: "Leave Management", href: "/dashboard/hr/leave", icon: Icons.Calendar },
+      { name: "Payroll", href: "/dashboard/hr/payroll", icon: Icons.DollarSign },
+      { name: "Training", href: "/dashboard/hr/training", icon: Icons.FileText },
+      { name: "Performance", href: "/dashboard/hr/performance", icon: Icons.BarChart3 },
     ]
   }
 ];
 
 // Global Request Menu
 const globalRequests = [
-  { name: "Item Requisition", href: "/dashboard/requests/item-requisition", icon: Package, permission: "create_item_requests" as const },
-  { name: "Purchase Request", href: "/dashboard/requests/purchase", icon: ShoppingCart, permission: "create_purchase_requests" as const },
-  { name: "Memo", href: "/dashboard/requests/memo", icon: FileEdit, permission: "create_memos" as const },
-  { name: "Leave Request", href: "/dashboard/requests/leave", icon: Calendar, permission: "request_leave" as const },
-  { name: "Timesheet", href: "/dashboard/requests/timesheet", icon: Clock, permission: "submit_timesheets" as const },
-  { name: "Maintenance Request", href: "/dashboard/requests/maintenance", icon: Wrench, permission: "request_maintenance" as const },
+  { name: "Item Requisition", href: "/dashboard/requests/item-requisition", icon: Icons.Package, permission: "create_item_requests" as const },
+  { name: "Purchase Request", href: "/dashboard/requests/purchase", icon: Icons.ShoppingCart, permission: "create_purchase_requests" as const },
+  { name: "Memo", href: "/dashboard/requests/memo", icon: Icons.FileEdit, permission: "create_memos" as const },
+  { name: "Leave Request", href: "/dashboard/requests/leave", icon: Icons.Calendar, permission: "request_leave" as const },
+  { name: "Timesheet", href: "/dashboard/requests/timesheet", icon: Icons.Clock, permission: "submit_timesheets" as const },
+  { name: "Maintenance Request", href: "/dashboard/requests/maintenance", icon: Icons.Wrench, permission: "request_maintenance" as const },
 ];
 
 // System Settings Menu
 const systemSettings = [
-  { name: "Access Management", href: "/dashboard/system/access", icon: UserCog, permission: "manage_users" as const },
-  { name: "System Config", href: "/dashboard/system/config", icon: Settings, permission: "system_settings" as const },
-  { name: "Plant Management", href: "/dashboard/system/plants", icon: Building2, permission: "manage_plants" as const },
-  { name: "User Management", href: "/dashboard/system/users", icon: Users, permission: "manage_users" as const },
+  { name: "Access Management", href: "/dashboard/system/access", icon: Icons.UserCog, permission: "manage_users" as const },
+  { name: "System Config", href: "/dashboard/system/config", icon: Icons.Settings, permission: "system_settings" as const },
+  { name: "Plant Management", href: "/dashboard/system/plants", icon: Icons.Building2, permission: "manage_plants" as const },
+  { name: "User Management", href: "/dashboard/system/users", icon: Icons.Users, permission: "manage_users" as const },
 ];
 
 export default function DashboardLayout({
@@ -244,7 +219,7 @@ export default function DashboardLayout({
                     : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
                 )}
               >
-                <LayoutDashboard className="h-5 w-5" />
+                <Icons.LayoutDashboard className="h-5 w-5" />
                 Dashboard
               </Link>
             </div>
@@ -283,9 +258,9 @@ export default function DashboardLayout({
                         {menu.name}
                       </div>
                       {isExpanded ? (
-                        <ChevronDown className="h-4 w-4" />
+                        <Icons.ChevronDown className="h-4 w-4" />
                       ) : (
-                        <ChevronRight className="h-4 w-4" />
+                        <Icons.ChevronRight className="h-4 w-4" />
                       )}
                     </CollapsibleTrigger>
 
@@ -347,7 +322,7 @@ export default function DashboardLayout({
               })}
             </div>
 
-            {/* System Settings */}
+            {/* System Icons.Settings */}
             {(user.role === 'super_admin' || checkPermission('manage_users') || checkPermission('system_settings')) && (
               <div className="space-y-1">
                 <h3 className="mb-2 px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
@@ -404,7 +379,7 @@ export default function DashboardLayout({
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="relative">
-                  <Bell className="h-5 w-5" />
+                  <Icons.Bell className="h-5 w-5" />
                   {unreadCount > 0 && (
                     <span className="absolute -top-1 -right-1 h-5 w-5 bg-butane-orange text-white text-xs rounded-full flex items-center justify-center">
                       {unreadCount > 9 ? '9+' : unreadCount}
@@ -485,15 +460,15 @@ export default function DashboardLayout({
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
-                <Settings className="mr-2 h-4 w-4" />
-                Settings
+                <Icons.Settings className="mr-2 h-4 w-4" />
+                Icons.Settings
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={handleLogout}
                 className="text-destructive"
               >
-                <LogOut className="mr-2 h-4 w-4" />
+                <Icons.LogOut className="mr-2 h-4 w-4" />
                 Logout
               </DropdownMenuItem>
             </DropdownMenuContent>
