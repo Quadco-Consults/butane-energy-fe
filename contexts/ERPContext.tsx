@@ -7,8 +7,19 @@ import {
   Order,
   Plant,
   InventoryTransaction,
-  DashboardStats
+  DashboardStats,
+  Truck
 } from '@/lib/types';
+import { useAuth } from './AuthContext';
+import {
+  filterProductsByDepartment,
+  filterCustomersByDepartment,
+  filterOrdersByDepartment,
+  filterPlantsForUser,
+  filterTrucksByDepartment,
+  filterDashboardStats,
+  canPerformAction
+} from '@/lib/filters';
 
 interface ERPContextType {
   // Products
@@ -33,12 +44,20 @@ interface ERPContextType {
   addPlant: (plant: Omit<Plant, 'id'>) => void;
   updatePlant: (id: string, plant: Partial<Plant>) => void;
 
+  // Trucks
+  trucks: Truck[];
+  addTruck: (truck: Omit<Truck, 'id'>) => void;
+  updateTruck: (id: string, truck: Partial<Truck>) => void;
+
   // Inventory
   inventoryTransactions: InventoryTransaction[];
   addInventoryTransaction: (transaction: Omit<InventoryTransaction, 'id'>) => void;
 
   // Dashboard
   dashboardStats: DashboardStats;
+
+  // Permission checks
+  canPerformAction: (action: string, plantId?: string) => boolean;
 }
 
 const ERPContext = createContext<ERPContextType | undefined>(undefined);
@@ -220,72 +239,167 @@ const mockOrders: Order[] = [
   }
 ];
 
+const mockTrucks: Truck[] = [
+  {
+    id: 'truck-001',
+    plateNumber: 'KN-234-AB',
+    type: 'offtake',
+    capacity: 33000, // 33MT capacity
+    driver: 'Ahmed Mohammed',
+    driverPhone: '+234803111001',
+    status: 'available',
+    currentLocation: 'Kano Depot',
+    assignedPlantId: 'plant-1'
+  },
+  {
+    id: 'truck-002',
+    plateNumber: 'KD-567-CD',
+    type: 'offtake',
+    capacity: 33000,
+    driver: 'Ibrahim Abdullahi',
+    driverPhone: '+234803222002',
+    status: 'in-transit',
+    currentLocation: 'En route to Kaduna',
+    assignedPlantId: 'plant-2'
+  },
+  {
+    id: 'truck-003',
+    plateNumber: 'AB-890-EF',
+    type: 'delivery',
+    capacity: 20000,
+    driver: 'Musa Garba',
+    driverPhone: '+234803333003',
+    status: 'loading',
+    currentLocation: 'Abuja Terminal',
+    assignedPlantId: 'plant-3'
+  },
+  {
+    id: 'truck-004',
+    plateNumber: 'KN-111-GH',
+    type: 'bobtail',
+    capacity: 5000, // 5000L capacity for bobtail
+    driver: 'Salisu Hassan',
+    driverPhone: '+234803444004',
+    status: 'available',
+    currentLocation: 'Kano Plant',
+    assignedPlantId: 'plant-1'
+  },
+  {
+    id: 'truck-005',
+    plateNumber: 'KD-222-IJ',
+    type: 'bobtail',
+    capacity: 5000,
+    driver: 'Usman Danjuma',
+    driverPhone: '+234803555005',
+    status: 'maintenance',
+    currentLocation: 'Kaduna Workshop',
+    assignedPlantId: 'plant-2'
+  }
+];
+
 export function ERPProvider({ children }: { children: React.ReactNode }) {
-  const [products, setProducts] = useState<Product[]>(mockProducts);
-  const [customers, setCustomers] = useState<Customer[]>(mockCustomers);
-  const [orders, setOrders] = useState<Order[]>(mockOrders);
-  const [plants, setPlants] = useState<Plant[]>(mockPlants);
+  const { user } = useAuth();
+  const [allProducts, setAllProducts] = useState<Product[]>(mockProducts);
+  const [allCustomers, setAllCustomers] = useState<Customer[]>(mockCustomers);
+  const [allOrders, setAllOrders] = useState<Order[]>(mockOrders);
+  const [allPlants, setAllPlants] = useState<Plant[]>(mockPlants);
+  const [allTrucks, setAllTrucks] = useState<Truck[]>(mockTrucks);
   const [inventoryTransactions, setInventoryTransactions] = useState<InventoryTransaction[]>([]);
 
-  // Calculate dashboard stats
-  const dashboardStats: DashboardStats = {
-    totalRevenue: orders.reduce((sum, order) => sum + order.totalAmount, 0),
-    totalOrders: orders.length,
-    totalCustomers: customers.length,
-    inventoryValue: products.reduce((sum, p) => sum + (p.price * p.stockLevel), 0),
-    lowStockItems: products.filter(p => p.stockLevel <= p.reorderLevel).length,
-    pendingOrders: orders.filter(o => o.status === 'pending').length,
-    revenueGrowth: 12.5,
-    ordersGrowth: 8.3
+  // Filter data based on user access
+  const products = user ? filterProductsByDepartment(allProducts, user) : [];
+  const customers = user ? filterCustomersByDepartment(allCustomers, user) : [];
+  const orders = user ? filterOrdersByDepartment(allOrders, user) : [];
+  const plants = user ? filterPlantsForUser(allPlants, user) : [];
+  const trucks = user ? filterTrucksByDepartment(allTrucks, user) : [];
+
+  // Calculate dashboard stats with filtered data
+  const dashboardStats: DashboardStats = user ? filterDashboardStats({
+    orders: allOrders,
+    customers: allCustomers,
+    inventory: allProducts.map(p => ({
+      id: p.id,
+      productId: p.id,
+      productName: p.name,
+      currentStock: p.stockLevel,
+      minStockLevel: p.reorderLevel,
+      plantId: p.plantId,
+      lastUpdated: new Date().toISOString(),
+      unit: p.unit
+    })),
+    processes: []
+  }, user) : {
+    totalOrders: 0,
+    totalCustomers: 0,
+    totalProducts: 0,
+    pendingProcesses: 0,
+    recentOrders: [],
+    lowStockItems: [],
+    urgentProcesses: []
+  };
+
+  // Permission check wrapper
+  const canPerformActionWrapper = (action: string, plantId?: string): boolean => {
+    return user ? canPerformAction(action, user, plantId) : false;
   };
 
   // Products
   const addProduct = (product: Omit<Product, 'id'>) => {
     const newProduct = { ...product, id: `prod-${Date.now()}` };
-    setProducts([...products, newProduct]);
+    setAllProducts([...allProducts, newProduct]);
   };
 
   const updateProduct = (id: string, update: Partial<Product>) => {
-    setProducts(products.map(p => p.id === id ? { ...p, ...update } : p));
+    setAllProducts(allProducts.map(p => p.id === id ? { ...p, ...update } : p));
   };
 
   const deleteProduct = (id: string) => {
-    setProducts(products.filter(p => p.id !== id));
+    setAllProducts(allProducts.filter(p => p.id !== id));
   };
 
   // Customers
   const addCustomer = (customer: Omit<Customer, 'id'>) => {
     const newCustomer = { ...customer, id: `cust-${Date.now()}` };
-    setCustomers([...customers, newCustomer]);
+    setAllCustomers([...allCustomers, newCustomer]);
   };
 
   const updateCustomer = (id: string, update: Partial<Customer>) => {
-    setCustomers(customers.map(c => c.id === id ? { ...c, ...update } : c));
+    setAllCustomers(allCustomers.map(c => c.id === id ? { ...c, ...update } : c));
   };
 
   const deleteCustomer = (id: string) => {
-    setCustomers(customers.filter(c => c.id !== id));
+    setAllCustomers(allCustomers.filter(c => c.id !== id));
   };
 
   // Orders
   const addOrder = (order: Omit<Order, 'id' | 'orderNumber'>) => {
-    const orderNumber = `ORD-2025-${String(orders.length + 1).padStart(3, '0')}`;
+    const orderNumber = `ORD-2025-${String(allOrders.length + 1).padStart(3, '0')}`;
     const newOrder = { ...order, id: `ord-${Date.now()}`, orderNumber };
-    setOrders([...orders, newOrder]);
+    setAllOrders([...allOrders, newOrder]);
   };
 
   const updateOrder = (id: string, update: Partial<Order>) => {
-    setOrders(orders.map(o => o.id === id ? { ...o, ...update } : o));
+    setAllOrders(allOrders.map(o => o.id === id ? { ...o, ...update } : o));
   };
 
   // Plants
   const addPlant = (plant: Omit<Plant, 'id'>) => {
     const newPlant = { ...plant, id: `plant-${Date.now()}` };
-    setPlants([...plants, newPlant]);
+    setAllPlants([...allPlants, newPlant]);
   };
 
   const updatePlant = (id: string, update: Partial<Plant>) => {
-    setPlants(plants.map(p => p.id === id ? { ...p, ...update } : p));
+    setAllPlants(allPlants.map(p => p.id === id ? { ...p, ...update } : p));
+  };
+
+  // Trucks
+  const addTruck = (truck: Omit<Truck, 'id'>) => {
+    const newTruck = { ...truck, id: `truck-${Date.now()}` };
+    setAllTrucks([...allTrucks, newTruck]);
+  };
+
+  const updateTruck = (id: string, update: Partial<Truck>) => {
+    setAllTrucks(allTrucks.map(t => t.id === id ? { ...t, ...update } : t));
   };
 
   // Inventory
@@ -296,11 +410,11 @@ export function ERPProvider({ children }: { children: React.ReactNode }) {
     // Update product stock
     if (transaction.type === 'in' || transaction.type === 'adjustment') {
       updateProduct(transaction.productId, {
-        stockLevel: products.find(p => p.id === transaction.productId)!.stockLevel + transaction.quantity
+        stockLevel: allProducts.find(p => p.id === transaction.productId)!.stockLevel + transaction.quantity
       });
     } else if (transaction.type === 'out') {
       updateProduct(transaction.productId, {
-        stockLevel: products.find(p => p.id === transaction.productId)!.stockLevel - transaction.quantity
+        stockLevel: allProducts.find(p => p.id === transaction.productId)!.stockLevel - transaction.quantity
       });
     }
   };
@@ -322,9 +436,13 @@ export function ERPProvider({ children }: { children: React.ReactNode }) {
         plants,
         addPlant,
         updatePlant,
+        trucks,
+        addTruck,
+        updateTruck,
         inventoryTransactions,
         addInventoryTransaction,
-        dashboardStats
+        dashboardStats,
+        canPerformAction: canPerformActionWrapper
       }}
     >
       {children}

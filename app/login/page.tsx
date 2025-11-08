@@ -27,10 +27,14 @@ export default function LoginPage() {
     setError("");
 
     try {
-      await login(email, password);
-      router.push("/dashboard");
+      const success = await login(email, password);
+      if (success) {
+        router.push("/dashboard");
+      } else {
+        setError("Invalid email or password. Please check your credentials.");
+      }
     } catch (err) {
-      setError("Invalid credentials");
+      setError("Login failed. Please try again.");
     }
   };
 
@@ -79,10 +83,69 @@ export default function LoginPage() {
                 {isLoading ? "Signing in..." : "Sign In"}
               </Button>
             </form>
-            <div className="mt-6 text-center text-sm text-muted-foreground">
-              <p>Demo credentials:</p>
-              <p className="mt-1">Email: admin@butanenergy.com</p>
-              <p>Password: any password</p>
+            <div className="mt-6 space-y-3">
+              <div className="text-center text-sm text-muted-foreground">
+                <p className="font-medium">Demo Users (Password: demo123)</p>
+              </div>
+              <div className="space-y-2 text-xs">
+                <div
+                  className="p-2 bg-gray-50 rounded cursor-pointer hover:bg-gray-100"
+                  onClick={() => setEmail('musa.garba@butane-energy.com')}
+                >
+                  <p className="font-medium">Executive (Full Access)</p>
+                  <p className="text-muted-foreground">musa.garba@butane-energy.com</p>
+                </div>
+                <div
+                  className="p-2 bg-gray-50 rounded cursor-pointer hover:bg-gray-100"
+                  onClick={() => setEmail('ahmed.mohammed@butane-energy.com')}
+                >
+                  <p className="font-medium">Operations Manager (Kano Plant)</p>
+                  <p className="text-muted-foreground">ahmed.mohammed@butane-energy.com</p>
+                </div>
+                <div
+                  className="p-2 bg-gray-50 rounded cursor-pointer hover:bg-gray-100"
+                  onClick={() => setEmail('emeka.okafor@butane-energy.com')}
+                >
+                  <p className="font-medium">Finance Department Head</p>
+                  <p className="text-muted-foreground">emeka.okafor@butane-energy.com</p>
+                </div>
+                <div
+                  className="p-2 bg-gray-50 rounded cursor-pointer hover:bg-gray-100"
+                  onClick={() => setEmail('grace.adebayo@butane-energy.com')}
+                >
+                  <p className="font-medium">Procurement Head</p>
+                  <p className="text-muted-foreground">grace.adebayo@butane-energy.com</p>
+                </div>
+                <div
+                  className="p-2 bg-gray-50 rounded cursor-pointer hover:bg-gray-100"
+                  onClick={() => setEmail('fatima.aliyu@butane-energy.com')}
+                >
+                  <p className="font-medium">Trading Department</p>
+                  <p className="text-muted-foreground">fatima.aliyu@butane-energy.com</p>
+                </div>
+                <div
+                  className="p-2 bg-gray-50 rounded cursor-pointer hover:bg-gray-100"
+                  onClick={() => setEmail('ibrahim.usman@butane-energy.com')}
+                >
+                  <p className="font-medium">Logistics Head</p>
+                  <p className="text-muted-foreground">ibrahim.usman@butane-energy.com</p>
+                </div>
+                <div
+                  className="p-2 bg-gray-50 rounded cursor-pointer hover:bg-gray-100"
+                  onClick={() => setEmail('khadija.yusuf@butane-energy.com')}
+                >
+                  <p className="font-medium">HR Department Head</p>
+                  <p className="text-muted-foreground">khadija.yusuf@butane-energy.com</p>
+                </div>
+                <div
+                  className="p-2 bg-gray-50 rounded cursor-pointer hover:bg-gray-100"
+                  onClick={() => setEmail('aisha.ibrahim@butane-energy.com')}
+                >
+                  <p className="font-medium">Sales Representative</p>
+                  <p className="text-muted-foreground">aisha.ibrahim@butane-energy.com</p>
+                </div>
+              </div>
+              <p className="text-xs text-center text-muted-foreground">Click any user to auto-fill email</p>
             </div>
           </CardContent>
         </Card>

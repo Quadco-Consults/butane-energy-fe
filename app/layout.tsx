@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ERPProvider } from "@/contexts/ERPContext";
+import { WorkflowProvider } from "@/contexts/WorkflowContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,8 +16,15 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Butane Energy ERP",
-  description: "Enterprise Resource Planning System for Butane Energy Limited",
+  title: "Butane Energy ERP | RC 423007",
+  description: "Enterprise Resource Planning System for Butane Energy Limited - LPG Storage, Trading, and Marketing Company",
+  keywords: ["ERP", "Butane Energy", "LPG", "Nigeria", "Enterprise Resource Planning", "Gas Trading"],
+  authors: [{ name: "Butane Energy Limited" }],
+  openGraph: {
+    title: "Butane Energy ERP System",
+    description: "Professional ERP System for LPG Operations",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
@@ -31,7 +39,9 @@ export default function RootLayout({
       >
         <AuthProvider>
           <ERPProvider>
-            {children}
+            <WorkflowProvider>
+              {children}
+            </WorkflowProvider>
           </ERPProvider>
         </AuthProvider>
       </body>
