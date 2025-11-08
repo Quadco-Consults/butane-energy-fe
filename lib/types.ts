@@ -88,6 +88,14 @@ export type Permission =
   | 'manage_documents'
   | 'coordinate_meetings'
 
+  // Global Requests
+  | 'create_item_requests'
+  | 'create_memos'
+  | 'request_leave'
+  | 'submit_timesheets'
+  | 'request_maintenance'
+  | 'manage_plants'
+
   // IT
   | 'system_administration'
   | 'user_management'

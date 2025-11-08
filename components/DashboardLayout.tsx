@@ -1,9 +1,9 @@
 "use client";
 
+import React, { useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useWorkflow } from "@/contexts/WorkflowContext";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useRouter, usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   Package,
@@ -21,9 +21,16 @@ import {
   FileText,
   TrendingUp,
   DollarSign,
+  UserCog,
+  Calendar,
+  Clock,
+  Wrench,
+  FileEdit,
+  Send,
+  ChevronDown,
+  ChevronRight,
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
 import { Avatar, AvatarFallback } from "./ui/avatar";
@@ -36,30 +43,106 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "./ui/collapsible";
 import { AuthGuard } from "./AuthGuard";
 import { getAuthorizedNavigation } from "@/lib/filters";
 
-const navigation = [
-  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard, permission: "view_dashboard" as const },
-  { name: "Inventory", href: "/dashboard/inventory", icon: Package, permission: "view_orders" as const },
-  { name: "Orders", href: "/dashboard/orders", icon: ShoppingCart, permission: "view_orders" as const },
-  { name: "Customers", href: "/dashboard/customers", icon: Users, permission: "manage_customers" as const },
-  { name: "Plants", href: "/dashboard/plants", icon: Building2, permission: "view_dashboard" as const },
-  { name: "Reports", href: "/dashboard/reports", icon: BarChart3, permission: "view_financial_reports" as const },
-  { name: "User Management", href: "/dashboard/users", icon: Users, permission: "manage_users" as const },
-  { name: "System Settings", href: "/dashboard/settings", icon: Settings, permission: "system_settings" as const },
+// Department Menu Structure
+const departmentMenus = [
+  {
+    name: "Procurement",
+    icon: ClipboardCheck,
+    permission: "create_purchase_requests" as const,
+    department: "procurement",
+    subItems: [
+      { name: "Procurement Dashboard", href: "/dashboard/procurement", icon: LayoutDashboard },
+      { name: "Tenders", href: "/dashboard/procurement/tenders", icon: FileText },
+      { name: "RFQ Management", href: "/dashboard/procurement/rfq", icon: Search },
+      { name: "Purchase Orders", href: "/dashboard/procurement/purchase-orders", icon: ShoppingCart },
+      { name: "Vendor Management", href: "/dashboard/procurement/vendors", icon: Users },
+    ]
+  },
+  {
+    name: "Admin",
+    icon: Briefcase,
+    permission: "manage_admin_operations" as const,
+    department: "admin",
+    subItems: [
+      { name: "Admin Dashboard", href: "/dashboard/admin", icon: LayoutDashboard },
+      { name: "Inhouse Store", href: "/dashboard/admin/store", icon: Package },
+      { name: "Item Requests", href: "/dashboard/admin/item-requests", icon: FileEdit },
+      { name: "Office Maintenance", href: "/dashboard/admin/maintenance", icon: Wrench },
+      { name: "Facility Management", href: "/dashboard/admin/facility", icon: Building2 },
+      { name: "Service Orders", href: "/dashboard/admin/service-orders", icon: Settings },
+    ]
+  },
+  {
+    name: "Operations",
+    icon: Package,
+    permission: "manage_inbound_operations" as const,
+    department: "operations",
+    subItems: [
+      { name: "Operations Dashboard", href: "/dashboard/operations", icon: LayoutDashboard },
+      { name: "Trading", href: "/dashboard/operations/trading", icon: TrendingUp },
+      { name: "Logistics", href: "/dashboard/operations/logistics", icon: Truck },
+      { name: "LPG Sales Process", href: "/dashboard/operations/trading/sales", icon: DollarSign },
+      { name: "Stock Management", href: "/dashboard/operations/trading/stock", icon: Package },
+      { name: "Truck Dispatching", href: "/dashboard/operations/logistics/offtake", icon: Truck },
+      { name: "Investigations", href: "/dashboard/investigations", icon: Search },
+    ]
+  },
+  {
+    name: "Finance",
+    icon: DollarSign,
+    permission: "view_financial_reports" as const,
+    department: "finance",
+    subItems: [
+      { name: "Finance Dashboard", href: "/dashboard/finance", icon: LayoutDashboard },
+      { name: "Purchase Process", href: "/dashboard/finance/purchase", icon: ShoppingCart },
+      { name: "Imprest Process", href: "/dashboard/finance/imprest", icon: UserCog },
+      { name: "Profit & Loss", href: "/dashboard/finance/profit-loss", icon: TrendingUp },
+      { name: "Balance Sheet", href: "/dashboard/finance/balance-sheet", icon: BarChart3 },
+      { name: "Trial Balance", href: "/dashboard/finance/trial-balance", icon: FileText },
+      { name: "Accounts P/R", href: "/dashboard/finance/accounts", icon: Users },
+      { name: "Financial Reports", href: "/dashboard/finance/reports", icon: FileText },
+    ]
+  },
+  {
+    name: "HR",
+    icon: Users,
+    permission: "manage_employees" as const,
+    department: "hr",
+    subItems: [
+      { name: "HR Dashboard", href: "/dashboard/hr", icon: LayoutDashboard },
+      { name: "Employee Management", href: "/dashboard/hr/employees", icon: Users },
+      { name: "Leave Management", href: "/dashboard/hr/leave", icon: Calendar },
+      { name: "Payroll", href: "/dashboard/hr/payroll", icon: DollarSign },
+      { name: "Training", href: "/dashboard/hr/training", icon: FileText },
+      { name: "Performance", href: "/dashboard/hr/performance", icon: BarChart3 },
+    ]
+  }
 ];
 
-const workflowNavigation = [
-  { name: "Admin Operations", href: "/dashboard/admin", icon: Briefcase, department: "admin", permission: "manage_admin_operations" as const },
-  { name: "Operations Department", href: "/dashboard/operations", icon: Package, department: "operations", permission: "manage_inbound_operations" as const },
-  { name: "Inbound Operations", href: "/dashboard/inbound", icon: Truck, department: "operations", permission: "manage_inbound_operations" as const },
-  { name: "Procurement", href: "/dashboard/procurement", icon: ClipboardCheck, department: "procurement", permission: "create_purchase_requests" as const },
-  { name: "Finance Department", href: "/dashboard/finance", icon: DollarSign, department: "finance", permission: "view_financial_reports" as const },
-  { name: "Trading Operations", href: "/dashboard/trading", icon: TrendingUp, department: "trading", permission: "manage_trading_operations" as const },
-  { name: "Fleet Management", href: "/dashboard/fleet", icon: Truck, department: "logistics", permission: "manage_fleet" as const },
-  { name: "HR Management", href: "/dashboard/hr", icon: Users, department: "hr", permission: "manage_employees" as const },
-  { name: "Investigations", href: "/dashboard/investigations", icon: Search, department: "operations", permission: "handle_investigations" as const },
+// Global Request Menu
+const globalRequests = [
+  { name: "Item Requisition", href: "/dashboard/requests/item-requisition", icon: Package, permission: "create_item_requests" as const },
+  { name: "Purchase Request", href: "/dashboard/requests/purchase", icon: ShoppingCart, permission: "create_purchase_requests" as const },
+  { name: "Memo", href: "/dashboard/requests/memo", icon: FileEdit, permission: "create_memos" as const },
+  { name: "Leave Request", href: "/dashboard/requests/leave", icon: Calendar, permission: "request_leave" as const },
+  { name: "Timesheet", href: "/dashboard/requests/timesheet", icon: Clock, permission: "submit_timesheets" as const },
+  { name: "Maintenance Request", href: "/dashboard/requests/maintenance", icon: Wrench, permission: "request_maintenance" as const },
+];
+
+// System Settings Menu
+const systemSettings = [
+  { name: "Access Management", href: "/dashboard/system/access", icon: UserCog, permission: "manage_users" as const },
+  { name: "System Config", href: "/dashboard/system/config", icon: Settings, permission: "system_settings" as const },
+  { name: "Plant Management", href: "/dashboard/system/plants", icon: Building2, permission: "manage_plants" as const },
+  { name: "User Management", href: "/dashboard/system/users", icon: Users, permission: "manage_users" as const },
 ];
 
 export default function DashboardLayout({
@@ -67,18 +150,15 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { user, logout, isLoading, hasPermission, currentPlant } = useAuth();
-  const { getNotificationsForUser, getDashboardStats } = useWorkflow();
+  const { user, logout, isLoading, hasPermission } = useAuth();
+  const { getNotificationsForUser } = useWorkflow();
   const router = useRouter();
   const pathname = usePathname();
+  const [expandedMenus, setExpandedMenus] = React.useState<string[]>([]);
 
-  // Get user notifications and workflow stats
+  // Get user notifications
   const notifications = user ? getNotificationsForUser(user.id) : [];
   const unreadCount = notifications.filter(n => !n.isRead).length;
-  const workflowStats = getDashboardStats();
-
-  // Get authorized navigation for the user
-  const authorizedNavigation = user ? getAuthorizedNavigation(user) : { coreModules: [], businessProcesses: [] };
 
   useEffect(() => {
     if (!isLoading && !user) {
@@ -100,6 +180,30 @@ export default function DashboardLayout({
   const handleLogout = () => {
     logout();
     router.push("/login");
+  };
+
+  // Check if user has access to department
+  const hasAccessToDepartment = (department: string) => {
+    return user.role === 'super_admin' || user.department === department || user.department === 'admin';
+  };
+
+  // Check if user has permission
+  const checkPermission = (permission: string) => {
+    return user.role === 'super_admin' || user.permissions.includes(permission as any);
+  };
+
+  // Toggle menu expansion
+  const toggleMenu = (menuName: string) => {
+    setExpandedMenus(prev =>
+      prev.includes(menuName)
+        ? prev.filter(name => name !== menuName)
+        : [...prev, menuName]
+    );
+  };
+
+  // Check if menu should be active/expanded
+  const isMenuActive = (menuName: string, subItems: any[]) => {
+    return subItems.some(item => pathname.startsWith(item.href));
   };
 
   return (
@@ -128,84 +232,151 @@ export default function DashboardLayout({
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 space-y-1 px-3 py-4">
-            {/* Core Modules */}
+          <nav className="flex-1 overflow-y-auto px-3 py-4">
+            {/* Dashboard */}
             <div className="mb-4">
+              <Link
+                href="/dashboard"
+                className={cn(
+                  "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors mb-4",
+                  pathname === "/dashboard"
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                )}
+              >
+                <LayoutDashboard className="h-5 w-5" />
+                Dashboard
+              </Link>
+            </div>
+
+            {/* Department Menus */}
+            <div className="space-y-1 mb-6">
               <h3 className="mb-2 px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                Core Modules
+                Departments
               </h3>
-              {authorizedNavigation.coreModules.map((item) => {
-                const isActive =
-                  pathname === item.href || pathname.startsWith(item.href + "/");
-                const IconComponent = navigation.find(n => n.name === item.name)?.icon || LayoutDashboard;
+
+              {departmentMenus.map((menu) => {
+                if (!hasAccessToDepartment(menu.department) || !checkPermission(menu.permission)) {
+                  return null;
+                }
+
+                const MenuIcon = menu.icon;
+                const isExpanded = expandedMenus.includes(menu.name) || isMenuActive(menu.name, menu.subItems);
+                const hasActiveSubItem = isMenuActive(menu.name, menu.subItems);
+
                 return (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className={cn(
-                    "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
-                    isActive
-                      ? "bg-primary text-primary-foreground"
-                      : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-                  )}
-                >
-                  <IconComponent className="h-5 w-5" />
-                  {item.name}
-                </Link>
-              );
+                  <Collapsible
+                    key={menu.name}
+                    open={isExpanded}
+                    onOpenChange={() => toggleMenu(menu.name)}
+                  >
+                    <CollapsibleTrigger
+                      className={cn(
+                        "flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                        hasActiveSubItem
+                          ? "bg-secondary text-secondary-foreground"
+                          : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                      )}
+                    >
+                      <div className="flex items-center gap-3">
+                        <MenuIcon className="h-5 w-5" />
+                        {menu.name}
+                      </div>
+                      {isExpanded ? (
+                        <ChevronDown className="h-4 w-4" />
+                      ) : (
+                        <ChevronRight className="h-4 w-4" />
+                      )}
+                    </CollapsibleTrigger>
+
+                    <CollapsibleContent className="pl-6 mt-1 space-y-1">
+                      {menu.subItems.map((item) => {
+                        const ItemIcon = item.icon;
+                        const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
+
+                        return (
+                          <Link
+                            key={item.name}
+                            href={item.href}
+                            className={cn(
+                              "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors",
+                              isActive
+                                ? "bg-primary text-primary-foreground"
+                                : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                            )}
+                          >
+                            <ItemIcon className="h-4 w-4" />
+                            {item.name}
+                          </Link>
+                        );
+                      })}
+                    </CollapsibleContent>
+                  </Collapsible>
+                );
               })}
             </div>
 
-            {/* Workflow Processes */}
-            <div className="mb-4">
+            {/* Global Requests */}
+            <div className="space-y-1 mb-6">
               <h3 className="mb-2 px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                Business Processes
+                Requests
               </h3>
-              {authorizedNavigation.businessProcesses.map((item) => {
-                const isActive =
-                  pathname === item.href || pathname.startsWith(item.href + "/");
+              {globalRequests.map((request) => {
+                if (!checkPermission(request.permission)) {
+                  return null;
+                }
 
-                // Get count for this process type
-                const processCount = workflowStats.processesByType.find(
-                  p => p.type.includes(item.name.toLowerCase().split(' ')[0])
-                )?.count || 0;
-
-                const IconComponent = workflowNavigation.find(w => w.name === item.name)?.icon || Briefcase;
+                const RequestIcon = request.icon;
+                const isActive = pathname === request.href || pathname.startsWith(request.href + "/");
 
                 return (
                   <Link
-                    key={item.name}
-                    href={item.href}
+                    key={request.name}
+                    href={request.href}
                     className={cn(
-                      "flex items-center justify-between gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                      "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                       isActive
-                        ? "bg-secondary text-secondary-foreground"
+                        ? "bg-primary text-primary-foreground"
                         : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
                     )}
                   >
-                    <div className="flex items-center gap-3">
-                      <IconComponent className="h-5 w-5" />
-                      {item.name}
-                    </div>
-                    {processCount > 0 && (
-                      <span className="bg-butane-orange text-white text-xs rounded-full px-2 py-0.5 min-w-[1.25rem] text-center">
-                        {processCount}
-                      </span>
-                    )}
+                    <RequestIcon className="h-4 w-4" />
+                    {request.name}
                   </Link>
                 );
               })}
             </div>
 
-            {/* Investigation Alert */}
-            {workflowStats.investigationsRequired > 0 && (
-              <div className="mx-3 p-3 bg-destructive/10 border border-destructive/20 rounded-lg">
-                <div className="flex items-center gap-2 text-destructive">
-                  <Search className="h-4 w-4" />
-                  <span className="text-sm font-medium">
-                    {workflowStats.investigationsRequired} Investigation{workflowStats.investigationsRequired > 1 ? 's' : ''} Required
-                  </span>
-                </div>
+            {/* System Settings */}
+            {(user.role === 'super_admin' || checkPermission('manage_users') || checkPermission('system_settings')) && (
+              <div className="space-y-1">
+                <h3 className="mb-2 px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                  System
+                </h3>
+                {systemSettings.map((setting) => {
+                  if (!checkPermission(setting.permission)) {
+                    return null;
+                  }
+
+                  const SettingIcon = setting.icon;
+                  const isActive = pathname === setting.href || pathname.startsWith(setting.href + "/");
+
+                  return (
+                    <Link
+                      key={setting.name}
+                      href={setting.href}
+                      className={cn(
+                        "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                        isActive
+                          ? "bg-primary text-primary-foreground"
+                          : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                      )}
+                    >
+                      <SettingIcon className="h-4 w-4" />
+                      {setting.name}
+                    </Link>
+                  );
+                })}
               </div>
             )}
           </nav>
