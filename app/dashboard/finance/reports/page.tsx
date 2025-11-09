@@ -1,5 +1,6 @@
 "use client";
 
+import DashboardLayout from "@/components/DashboardLayout";
 import { useAuth } from "@/contexts/AuthContext";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -251,14 +252,15 @@ export default function FinancialReportsPage() {
   const pendingReports = availableReports.filter(r => r.status === 'pending').length;
 
   return (
-    <div className="space-y-6">
-      {/* Page Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-foreground">Financial Reports</h1>
-        <p className="text-muted-foreground mt-2">
-          Comprehensive financial reporting and analytics system for Butane Energy
-        </p>
-      </div>
+    <DashboardLayout>
+      <div className="space-y-6">
+        {/* Page Header */}
+        <div>
+          <h1 className="text-3xl font-bold text-foreground">Financial Reports</h1>
+          <p className="text-muted-foreground mt-2">
+            Comprehensive financial reporting and analytics system for Butane Energy
+          </p>
+        </div>
 
       {/* Statistics Cards */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -587,7 +589,7 @@ export default function FinancialReportsPage() {
                         </div>
                       </div>
                     ))}
-                </div>
+                  </div>
               </CardContent>
             </Card>
 
@@ -693,6 +695,7 @@ export default function FinancialReportsPage() {
           </div>
         </TabsContent>
       </Tabs>
-    </div>
+      </div>
+    </DashboardLayout>
   );
 }

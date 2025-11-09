@@ -1,5 +1,6 @@
 "use client";
 
+import DashboardLayout from "@/components/DashboardLayout";
 import { useAuth } from "@/contexts/AuthContext";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -305,7 +306,8 @@ export default function ImprestProcessPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <DashboardLayout>
+      <div className="space-y-6">
       {/* Page Header */}
       <div>
         <h1 className="text-3xl font-bold text-foreground">Imprest Process</h1>
@@ -800,6 +802,7 @@ export default function ImprestProcessPage() {
           </div>
         </TabsContent>
       </Tabs>
-    </div>
+      </div>
+    </DashboardLayout>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import DashboardLayout from "@/components/DashboardLayout";
 import { useAuth } from "@/contexts/AuthContext";
 import { StatsCard, ListCard, DataTableHeader } from "@/components/ui/layout-cards";
 import { DataTable, TableColumn, StatusCell, DateCell, CurrencyCell, ActionCell } from "@/components/ui/data-table";
@@ -270,7 +271,8 @@ export default function PurchaseRequestPage() {
   if (!user) return null;
 
   return (
-    <div className="space-y-6">
+    <DashboardLayout>
+      <div className="space-y-6">
       {/* Page Header */}
       <div>
         <h1 className={designSystem.getHeading("h1")}>Purchase Requests</h1>
@@ -547,6 +549,7 @@ export default function PurchaseRequestPage() {
           }}
         />
       </section>
-    </div>
+      </div>
+    </DashboardLayout>
   );
 }

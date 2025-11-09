@@ -1,5 +1,7 @@
 "use client";
 
+import React from "react";
+import DashboardLayout from "@/components/DashboardLayout";
 import { useAuth } from "@/contexts/AuthContext";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -265,7 +267,8 @@ export default function ProfitLossPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <DashboardLayout>
+      <div className="space-y-6">
       {/* Page Header */}
       <div>
         <h1 className="text-3xl font-bold text-foreground">Profit & Loss Statement</h1>
@@ -869,6 +872,7 @@ export default function ProfitLossPage() {
           </Card>
         </TabsContent>
       </Tabs>
-    </div>
+      </div>
+    </DashboardLayout>
   );
 }
