@@ -520,14 +520,12 @@ export default function InvestigationsPage() {
                     {
                       label: "Update Status",
                       onClick: () => success(`Updating ${row.caseNumber} status`),
-                      variant: "outline",
-                      disabled: row.status === 'closed'
+                      variant: "outline"
                     },
                     {
                       label: "Add Evidence",
                       onClick: () => success(`Adding evidence to ${row.caseNumber}`),
-                      variant: "outline",
-                      disabled: row.status === 'closed'
+                      variant: "outline"
                     }
                   ]}
                 />

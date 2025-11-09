@@ -509,8 +509,7 @@ export default function ItemRequestsPage() {
                     {
                       label: "Edit",
                       onClick: () => success(`Editing ${row.requestNumber}`),
-                      variant: "outline",
-                      disabled: row.status === 'approved' || row.status === 'rejected'
+                      variant: "outline"
                     },
                     {
                       label: row.status === 'pending' ? "Approve" : "View Status",

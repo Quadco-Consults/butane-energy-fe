@@ -326,7 +326,7 @@ export default function FinancePage() {
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">Net Profit:</span>
                       <span className="font-medium text-green-600">
-                        {formatCurrency(module.stats.currentMonth)}
+                        {formatCurrency(module.stats.currentMonth || 0)}
                       </span>
                     </div>
                   )}
@@ -334,7 +334,7 @@ export default function FinancePage() {
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">Total Assets:</span>
                       <span className="font-medium">
-                        {formatCurrency(module.stats.assets)}
+                        {formatCurrency(module.stats.assets || 0)}
                       </span>
                     </div>
                   )}

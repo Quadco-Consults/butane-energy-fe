@@ -96,10 +96,10 @@ export default function ReportsPage() {
               <DollarSign className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">₦{dashboardStats.totalRevenue.toLocaleString()}</div>
+              <div className="text-2xl font-bold">₦{(dashboardStats?.totalRevenue || 0).toLocaleString()}</div>
               <div className="flex items-center text-xs text-green-600 mt-1">
                 <TrendingUp className="h-3 w-3 mr-1" />
-                +{dashboardStats.revenueGrowth}% from last month
+                +{dashboardStats?.revenueGrowth || 0}% from last month
               </div>
             </CardContent>
           </Card>
@@ -112,10 +112,10 @@ export default function ReportsPage() {
               <ShoppingCart className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{dashboardStats.totalOrders}</div>
+              <div className="text-2xl font-bold">{dashboardStats?.totalOrders || 0}</div>
               <div className="flex items-center text-xs text-green-600 mt-1">
                 <TrendingUp className="h-3 w-3 mr-1" />
-                +{dashboardStats.ordersGrowth}% from last month
+                +{dashboardStats?.ordersGrowth || 0}% from last month
               </div>
             </CardContent>
           </Card>
@@ -128,7 +128,7 @@ export default function ReportsPage() {
               <Users className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{dashboardStats.totalCustomers}</div>
+              <div className="text-2xl font-bold">{dashboardStats?.totalCustomers || 0}</div>
               <p className="text-xs text-muted-foreground mt-1">
                 {customerSpending.length} with orders
               </p>
@@ -143,7 +143,7 @@ export default function ReportsPage() {
               <Package className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">₦{dashboardStats.inventoryValue.toLocaleString()}</div>
+              <div className="text-2xl font-bold">₦{(dashboardStats?.inventoryValue || 0).toLocaleString()}</div>
               <p className="text-xs text-muted-foreground mt-1">
                 Across {products.length} products
               </p>
@@ -169,8 +169,8 @@ export default function ReportsPage() {
                     <div className="flex items-center justify-between text-sm text-muted-foreground">
                       <span>{plant.orderCount} orders</span>
                       <span>
-                        {dashboardStats.totalRevenue > 0
-                          ? Math.round((plant.revenue / dashboardStats.totalRevenue) * 100)
+                        {(dashboardStats?.totalRevenue || 0) > 0
+                          ? Math.round((plant.revenue / (dashboardStats?.totalRevenue || 1)) * 100)
                           : 0}%
                       </span>
                     </div>
@@ -178,8 +178,8 @@ export default function ReportsPage() {
                       <div
                         className="bg-primary h-2 rounded-full"
                         style={{
-                          width: `${dashboardStats.totalRevenue > 0
-                            ? (plant.revenue / dashboardStats.totalRevenue) * 100
+                          width: `${(dashboardStats?.totalRevenue || 0) > 0
+                            ? (plant.revenue / (dashboardStats?.totalRevenue || 1)) * 100
                             : 0}%`,
                         }}
                       ></div>
