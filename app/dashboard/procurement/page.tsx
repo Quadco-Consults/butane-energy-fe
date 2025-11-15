@@ -14,7 +14,9 @@ import {
   DollarSign,
   Clock,
   CheckCircle,
-  AlertCircle
+  AlertCircle,
+  FileEdit,
+  BarChart3
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -125,6 +127,46 @@ export default function ProcurementPage() {
           </div>
         </div>
 
+        {/* SAP MM Process Overview */}
+        <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-xl font-bold text-blue-900 mb-2">SAP MM Procurement Process</h2>
+                <p className="text-blue-700 mb-4">
+                  Follow the standard Purchase-to-Pay (P2P) workflow: PR → PO → GR → IV
+                </p>
+                <div className="flex gap-2">
+                  <Link href="/dashboard/procurement/purchase-requisitions">
+                    <Button className="bg-blue-600 hover:bg-blue-700">
+                      <FileEdit className="w-4 h-4 mr-2" />
+                      Start with PR
+                    </Button>
+                  </Link>
+                  <Link href="/dashboard/procurement/analytics">
+                    <Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50">
+                      <BarChart3 className="w-4 h-4 mr-2" />
+                      View Analytics
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+              <div className="hidden md:block">
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div className="text-center p-3 bg-white rounded-lg shadow-sm">
+                    <div className="text-lg font-bold text-blue-600">94.2%</div>
+                    <div className="text-blue-600">Process Efficiency</div>
+                  </div>
+                  <div className="text-center p-3 bg-white rounded-lg shadow-sm">
+                    <div className="text-lg font-bold text-green-600">2.3 days</div>
+                    <div className="text-green-600">Avg Cycle Time</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Stats Grid */}
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <Card>
@@ -188,77 +230,34 @@ export default function ProcurementPage() {
           </Card>
         </div>
 
-        {/* Procurement Modules */}
-        <div className="grid gap-6 md:grid-cols-3">
-          {/* Tenders */}
+        {/* SAP MM Core Processes */}
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+          {/* Purchase Requisitions */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <FileText className="h-5 w-5 text-blue-500" />
-                Tenders
+                <FileEdit className="h-5 w-5 text-blue-500" />
+                Purchase Requisitions (PR)
               </CardTitle>
               <CardDescription>
-                Manage tender processes and supplier bids
+                SAP ME51N - Start the procurement process
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Link href="/dashboard/procurement/tenders">
+                <Link href="/dashboard/procurement/purchase-requisitions">
                   <Button variant="outline" className="w-full justify-start gap-2">
-                    <FileText className="h-4 w-4" />
-                    View All Tenders
-                  </Button>
-                </Link>
-                <Link href="/dashboard/procurement/tenders/new">
-                  <Button variant="outline" className="w-full justify-start gap-2">
-                    <Plus className="h-4 w-4" />
-                    Create New Tender
+                    <FileEdit className="h-4 w-4" />
+                    Manage PRs
                   </Button>
                 </Link>
               </div>
               <div className="text-sm">
-                <p className="font-medium">Recent Activity:</p>
+                <p className="font-medium">Current Status:</p>
                 <ul className="mt-1 space-y-1 text-muted-foreground">
-                  <li>• LPG Storage Tank - Open</li>
-                  <li>• Transport Services - Evaluation</li>
-                  <li>• Office Renovation - Closed</li>
-                </ul>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* RFQ */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <ClipboardList className="h-5 w-5 text-yellow-500" />
-                RFQ (Request for Quotation)
-              </CardTitle>
-              <CardDescription>
-                Create and manage request for quotations
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Link href="/dashboard/procurement/rfq">
-                  <Button variant="outline" className="w-full justify-start gap-2">
-                    <ClipboardList className="h-4 w-4" />
-                    View All RFQs
-                  </Button>
-                </Link>
-                <Link href="/dashboard/procurement/rfq/new">
-                  <Button variant="outline" className="w-full justify-start gap-2">
-                    <Plus className="h-4 w-4" />
-                    Create New RFQ
-                  </Button>
-                </Link>
-              </div>
-              <div className="text-sm">
-                <p className="font-medium">Recent Activity:</p>
-                <ul className="mt-1 space-y-1 text-muted-foreground">
-                  <li>• Office Equipment - Pending</li>
-                  <li>• Maintenance Supplies - Draft</li>
-                  <li>• IT Hardware - Quoted</li>
+                  <li>• 23 Pending Approval</li>
+                  <li>• 261 Approved</li>
+                  <li>• 2.3 days avg processing</li>
                 </ul>
               </div>
             </CardContent>
@@ -272,30 +271,188 @@ export default function ProcurementPage() {
                 Purchase Orders (PO)
               </CardTitle>
               <CardDescription>
-                Create and track purchase orders
+                SAP ME21N - Convert approved PRs to POs
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Link href="/dashboard/procurement/po">
+                <Link href="/dashboard/procurement/purchase-orders">
                   <Button variant="outline" className="w-full justify-start gap-2">
                     <ShoppingCart className="h-4 w-4" />
-                    View All POs
-                  </Button>
-                </Link>
-                <Link href="/dashboard/procurement/po/new">
-                  <Button variant="outline" className="w-full justify-start gap-2">
-                    <Plus className="h-4 w-4" />
-                    Create New PO
+                    Manage POs
                   </Button>
                 </Link>
               </div>
               <div className="text-sm">
-                <p className="font-medium">Recent Activity:</p>
+                <p className="font-medium">Current Status:</p>
                 <ul className="mt-1 space-y-1 text-muted-foreground">
-                  <li>• Safety Equipment - Approved</li>
-                  <li>• Raw Materials - Processing</li>
-                  <li>• Vehicle Parts - Delivered</li>
+                  <li>• 45 Open Orders</li>
+                  <li>• $12.45M Total Value</li>
+                  <li>• $6,472 avg order value</li>
+                </ul>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Goods Receipts */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <CheckCircle className="h-5 w-5 text-purple-500" />
+                Goods Receipts (GR)
+              </CardTitle>
+              <CardDescription>
+                SAP MIGO - Record delivery and quality
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Link href="/dashboard/procurement/goods-receipts">
+                  <Button variant="outline" className="w-full justify-start gap-2">
+                    <CheckCircle className="h-4 w-4" />
+                    Process GRs
+                  </Button>
+                </Link>
+              </div>
+              <div className="text-sm">
+                <p className="font-medium">Current Status:</p>
+                <ul className="mt-1 space-y-1 text-muted-foreground">
+                  <li>• 12 Pending Processing</li>
+                  <li>• 142 Completed</li>
+                  <li>• 1.5% quality issues</li>
+                </ul>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Invoice Verification */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <DollarSign className="h-5 w-5 text-orange-500" />
+                Invoice Verification (IV)
+              </CardTitle>
+              <CardDescription>
+                SAP MIRO - Three-way matching and payment
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Link href="/dashboard/procurement/invoice-verification">
+                  <Button variant="outline" className="w-full justify-start gap-2">
+                    <DollarSign className="h-4 w-4" />
+                    Verify Invoices
+                  </Button>
+                </Link>
+              </div>
+              <div className="text-sm">
+                <p className="font-medium">Current Status:</p>
+                <ul className="mt-1 space-y-1 text-muted-foreground">
+                  <li>• 7 Exceptions to Review</li>
+                  <li>• 139 Matched</li>
+                  <li>• 95.2% auto-match rate</li>
+                </ul>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Supporting Processes */}
+        <div className="grid gap-6 md:grid-cols-3">
+          {/* Vendor Management */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <ClipboardList className="h-5 w-5 text-indigo-500" />
+                Vendor Management
+              </CardTitle>
+              <CardDescription>
+                SAP MK01 - Vendor master and performance
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Link href="/dashboard/procurement/vendors">
+                  <Button variant="outline" className="w-full justify-start gap-2">
+                    <ClipboardList className="h-4 w-4" />
+                    Manage Vendors
+                  </Button>
+                </Link>
+              </div>
+              <div className="text-sm">
+                <p className="font-medium">Quick Stats:</p>
+                <ul className="mt-1 space-y-1 text-muted-foreground">
+                  <li>• 89 Active Vendors</li>
+                  <li>• 87.6% avg performance</li>
+                  <li>• 94.2% on-time delivery</li>
+                </ul>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Contract Management */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <FileText className="h-5 w-5 text-pink-500" />
+                Contract Management
+              </CardTitle>
+              <CardDescription>
+                Outline agreements and contracts
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Link href="/dashboard/procurement/contracts">
+                  <Button variant="outline" className="w-full justify-start gap-2">
+                    <FileText className="h-4 w-4" />
+                    Manage Contracts
+                  </Button>
+                </Link>
+              </div>
+              <div className="text-sm">
+                <p className="font-medium">Quick Stats:</p>
+                <ul className="mt-1 space-y-1 text-muted-foreground">
+                  <li>• 18 Active Contracts</li>
+                  <li>• $45.6M total value</li>
+                  <li>• 68.4% utilization</li>
+                </ul>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Analytics & Automation */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <BarChart3 className="h-5 w-5 text-cyan-500" />
+                Analytics & Automation
+              </CardTitle>
+              <CardDescription>
+                Process insights and workflow automation
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Link href="/dashboard/procurement/analytics">
+                  <Button variant="outline" className="w-full justify-start gap-2">
+                    <BarChart3 className="h-4 w-4" />
+                    View Analytics
+                  </Button>
+                </Link>
+                <Link href="/dashboard/procurement/workflow-automation">
+                  <Button variant="outline" className="w-full justify-start gap-2">
+                    <AlertCircle className="h-4 w-4" />
+                    Workflow Engine
+                  </Button>
+                </Link>
+              </div>
+              <div className="text-sm">
+                <p className="font-medium">Performance:</p>
+                <ul className="mt-1 space-y-1 text-muted-foreground">
+                  <li>• 94.2% health score</li>
+                  <li>• 42 active workflows</li>
+                  <li>• 98.5% success rate</li>
                 </ul>
               </div>
             </CardContent>

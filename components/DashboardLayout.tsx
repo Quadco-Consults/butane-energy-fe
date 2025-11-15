@@ -35,10 +35,40 @@ const departmentMenus = [
     department: "procurement",
     subItems: [
       { name: "Procurement Dashboard", href: "/dashboard/procurement", icon: Icons.LayoutDashboard },
-      { name: "Tenders", href: "/dashboard/procurement/tenders", icon: Icons.FileText },
+
+      // SAP MM Core Process Flow (P2P Cycle)
+      { name: "Purchase Requisitions (PR)", href: "/dashboard/procurement/purchase-requisitions", icon: Icons.FileEdit },
+      { name: "Purchase Orders (PO)", href: "/dashboard/procurement/purchase-orders", icon: Icons.ShoppingCart },
+      { name: "Goods Receipts (GR)", href: "/dashboard/procurement/goods-receipts", icon: Icons.Package },
+      { name: "Invoice Verification (IV)", href: "/dashboard/procurement/invoice-verification", icon: Icons.Calculator },
+
+      // Vendor & Contract Management
+      { name: "Vendor Master", href: "/dashboard/procurement/vendors", icon: Icons.Users },
+      { name: "Contract Management", href: "/dashboard/procurement/contracts", icon: Icons.Handshake },
+
+      // Supporting Processes
+      { name: "Three-Way Matching", href: "/dashboard/procurement/three-way-matching", icon: Icons.GitBranch },
       { name: "RFQ Management", href: "/dashboard/procurement/rfq", icon: Icons.Search },
-      { name: "Purchase Orders", href: "/dashboard/procurement/purchase-orders", icon: Icons.ShoppingCart },
-      { name: "Vendor Management", href: "/dashboard/procurement/vendors", icon: Icons.Users },
+      { name: "Tenders", href: "/dashboard/procurement/tenders", icon: Icons.FileText },
+
+      // Analytics & Automation
+      { name: "Procurement Analytics", href: "/dashboard/procurement/analytics", icon: Icons.BarChart3 },
+      { name: "Workflow Automation", href: "/dashboard/procurement/workflow-automation", icon: Icons.Workflow },
+      { name: "Reports", href: "/dashboard/procurement/reports", icon: Icons.FileSpreadsheet },
+    ]
+  },
+  {
+    name: "PDU",
+    icon: Icons.FolderOpen,
+    permission: "manage_pdu_operations" as const,
+    department: "pdu",
+    subItems: [
+      { name: "PDU Dashboard", href: "/dashboard/pdu", icon: Icons.LayoutDashboard },
+      { name: "Projects", href: "/dashboard/pdu/projects", icon: Icons.Folder },
+      { name: "Planning", href: "/dashboard/pdu/planning", icon: Icons.Calendar },
+      { name: "Tracking", href: "/dashboard/pdu/tracking", icon: Icons.MapPin },
+      { name: "Reports", href: "/dashboard/pdu/reports", icon: Icons.FileText },
+      { name: "Permits/Licenses", href: "/dashboard/pdu/permits", icon: Icons.Shield },
     ]
   },
   {
@@ -48,7 +78,9 @@ const departmentMenus = [
     department: "admin",
     subItems: [
       { name: "Admin Dashboard", href: "/dashboard/admin", icon: Icons.LayoutDashboard },
-      { name: "Inhouse Store", href: "/dashboard/admin/store", icon: Icons.Package },
+      { name: "Inventory", href: "/dashboard/admin/inventory", icon: Icons.Package },
+      { name: "Store", href: "/dashboard/admin/inventory/store", icon: Icons.Warehouse },
+      { name: "Assets", href: "/dashboard/admin/inventory/assets", icon: Icons.HardDrive },
       { name: "Item Requests", href: "/dashboard/admin/item-requests", icon: Icons.FileEdit },
       { name: "Office Maintenance", href: "/dashboard/admin/maintenance", icon: Icons.Wrench },
       { name: "Facility Management", href: "/dashboard/admin/facility", icon: Icons.Building2 },
@@ -77,13 +109,13 @@ const departmentMenus = [
     department: "finance",
     subItems: [
       { name: "Finance Dashboard", href: "/dashboard/finance", icon: Icons.LayoutDashboard },
-      { name: "Purchase Process", href: "/dashboard/finance/purchase", icon: Icons.ShoppingCart },
-      { name: "Imprest Process", href: "/dashboard/finance/imprest", icon: Icons.UserCog },
-      { name: "Profit & Loss", href: "/dashboard/finance/profit-loss", icon: Icons.TrendingUp },
-      { name: "Balance Sheet", href: "/dashboard/finance/balance-sheet", icon: Icons.BarChart3 },
-      { name: "Trial Balance", href: "/dashboard/finance/trial-balance", icon: Icons.FileText },
-      { name: "Accounts P/R", href: "/dashboard/finance/accounts", icon: Icons.Users },
-      { name: "Financial Reports", href: "/dashboard/finance/reports", icon: Icons.FileText },
+      { name: "Banking & Cash", href: "/dashboard/finance/banking", icon: Icons.Landmark },
+      { name: "Sales & Invoicing", href: "/dashboard/finance/sales", icon: Icons.FileText },
+      { name: "Expenses", href: "/dashboard/finance/expenses", icon: Icons.Receipt },
+      { name: "Chart of Accounts", href: "/dashboard/finance/chart-of-accounts", icon: Icons.List },
+      { name: "Reports & Analysis", href: "/dashboard/finance/reports", icon: Icons.BarChart3 },
+      { name: "Payroll", href: "/dashboard/finance/payroll", icon: Icons.Users },
+      { name: "Tax Center", href: "/dashboard/finance/taxes", icon: Icons.Calculator },
     ]
   },
   {
@@ -93,11 +125,16 @@ const departmentMenus = [
     department: "hr",
     subItems: [
       { name: "HR Dashboard", href: "/dashboard/hr", icon: Icons.LayoutDashboard },
-      { name: "Employee Management", href: "/dashboard/hr/employees", icon: Icons.Users },
-      { name: "Leave Management", href: "/dashboard/hr/leave", icon: Icons.Calendar },
-      { name: "Payroll", href: "/dashboard/hr/payroll", icon: Icons.DollarSign },
-      { name: "Training", href: "/dashboard/hr/training", icon: Icons.FileText },
-      { name: "Performance", href: "/dashboard/hr/performance", icon: Icons.BarChart3 },
+      { name: "PIM", href: "/dashboard/hr/pim", icon: Icons.Users },
+      { name: "Leave", href: "/dashboard/hr/leave", icon: Icons.Calendar },
+      { name: "Time & Attendance", href: "/dashboard/hr/time", icon: Icons.Clock },
+      { name: "Recruitment", href: "/dashboard/hr/recruitment", icon: Icons.UserPlus },
+      { name: "My Info", href: "/dashboard/hr/my-info", icon: Icons.User },
+      { name: "Performance", href: "/dashboard/hr/performance", icon: Icons.Target },
+      { name: "Dashboard", href: "/dashboard/hr/analytics", icon: Icons.BarChart3 },
+      { name: "Directory", href: "/dashboard/hr/directory", icon: Icons.Book },
+      { name: "Maintenance", href: "/dashboard/hr/maintenance", icon: Icons.Settings },
+      { name: "Buzz", href: "/dashboard/hr/buzz", icon: Icons.MessageSquare },
     ]
   }
 ];
