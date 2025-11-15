@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
+import { Progress } from "@/components/ui/progress";
 import { ProjectBudgetManager } from "@/components/ProjectBudgetManager";
 import { ProjectTenderManager } from "@/components/ProjectTenderManager";
 import { ProjectExecutionManager } from "@/components/ProjectExecutionManager";
@@ -24,7 +25,7 @@ import {
   CheckCircle,
   XCircle,
   AlertTriangle,
-  Progress,
+  Activity,
   Target,
   Briefcase,
   Settings,
@@ -384,7 +385,7 @@ export default function ProjectDetailPage() {
             Execution & Payment
           </TabsTrigger>
           <TabsTrigger value="workflow" className="gap-2">
-            <Progress className="h-4 w-4" />
+            <Activity className="h-4 w-4" />
             Workflow
           </TabsTrigger>
           <TabsTrigger value="documents" className="gap-2">
