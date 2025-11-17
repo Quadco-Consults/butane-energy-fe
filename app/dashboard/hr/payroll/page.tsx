@@ -7,6 +7,14 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Plus, Download, DollarSign, Calculator, PiggyBank, Users, CheckCircle, Check, Clock, XCircle, Circle, FileText, Edit, CreditCard } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from "recharts";
 import DashboardLayout from '@/components/DashboardLayout';
@@ -124,6 +132,8 @@ const payrollBreakdown = [
 const benefitsData = [
   {
     employee: "John Adeyemi",
+    employeeId: "EMP-001",
+    department: "TDU",
     healthInsurance: 15000,
     pensionContrib: 9000,
     lifeInsurance: 5000,
@@ -133,6 +143,8 @@ const benefitsData = [
   },
   {
     employee: "Sarah Okafor",
+    employeeId: "EMP-002",
+    department: "Logistics",
     healthInsurance: 12000,
     pensionContrib: 7500,
     lifeInsurance: 4000,
@@ -142,12 +154,25 @@ const benefitsData = [
   },
   {
     employee: "Ahmed Hassan",
+    employeeId: "EMP-003",
+    department: "Finance",
     healthInsurance: 10000,
     pensionContrib: 6000,
     lifeInsurance: 3000,
     transportAllowance: 15000,
     mealAllowance: 7000,
     totalBenefits: 41000
+  },
+  {
+    employee: "Grace Nneka",
+    employeeId: "EMP-004",
+    department: "HR",
+    healthInsurance: 12500,
+    pensionContrib: 8000,
+    lifeInsurance: 4500,
+    transportAllowance: 22000,
+    mealAllowance: 9000,
+    totalBenefits: 56000
   }
 ];
 
@@ -307,89 +332,87 @@ export default function PayrollPage() {
           </div>
 
           {/* Payroll Records */}
-          <div className="grid gap-4">
-            {filteredPayroll.map((record) => (
-              <Card key={record.id}>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-4">
-                      <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                        <span className="text-blue-600 font-medium">
-                          {record.employee.split(' ').map(n => n[0]).join('')}
-                        </span>
-                      </div>
-                      <div>
-                        <CardTitle className="text-lg">{record.employee}</CardTitle>
-                        <CardDescription>{record.department} • {record.position}</CardDescription>
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Badge className={getStatusColor(record.status)}>
-                        {getStatusIcon(record.status)}
-                        <span className="ml-1 capitalize">{record.status}</span>
-                      </Badge>
-                      <div className="text-right">
-                        <p className="text-lg font-bold">{formatCurrency(record.netPay)}</p>
-                        <p className="text-xs text-muted-foreground">Net Pay</p>
-                      </div>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                    <div>
-                      <p className="text-sm text-muted-foreground">Basic Salary</p>
-                      <p className="font-medium">{formatCurrency(record.basicSalary)}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground">Allowances</p>
-                      <p className="font-medium">{formatCurrency(record.allowances)}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground">Overtime + Bonus</p>
-                      <p className="font-medium">{formatCurrency(record.overtime + record.bonus)}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground">Total Deductions</p>
-                      <p className="font-medium text-red-600">
-                        -{formatCurrency(record.deductions + record.tax + record.pension)}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
-                    <div>
-                      <p className="text-sm text-muted-foreground">Tax Deducted</p>
-                      <p className="font-medium">{formatCurrency(record.tax)}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground">Pension</p>
-                      <p className="font-medium">{formatCurrency(record.pension)}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground">Bank Account</p>
-                      <p className="font-medium">{record.bankAccount}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-end space-x-2">
-                    <Button variant="outline" size="sm">
-                      <FileText className="mr-2 h-4 w-4" />
-                      Payslip
-                    </Button>
-                    <Button variant="outline" size="sm">
-                      <Edit className="mr-2 h-4 w-4" />
-                      Edit
-                    </Button>
-                    {record.status === "approved" && (
-                      <Button size="sm">
-                        <CreditCard className="mr-2 h-4 w-4" />
-                        Process Payment
-                      </Button>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          <Card>
+            <CardHeader>
+              <CardTitle>Payroll Records</CardTitle>
+              <CardDescription>Detailed payroll breakdown for all employees</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Employee</TableHead>
+                      <TableHead>Department</TableHead>
+                      <TableHead>Position</TableHead>
+                      <TableHead>Basic Salary</TableHead>
+                      <TableHead>Allowances</TableHead>
+                      <TableHead>Overtime</TableHead>
+                      <TableHead>Bonus</TableHead>
+                      <TableHead>Deductions</TableHead>
+                      <TableHead>Tax</TableHead>
+                      <TableHead>Pension</TableHead>
+                      <TableHead>Net Pay</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Bank Account</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredPayroll.map((record) => (
+                      <TableRow key={record.id}>
+                        <TableCell>
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                              <span className="text-blue-600 text-sm font-medium">
+                                {record.employee.split(' ').map(n => n[0]).join('')}
+                              </span>
+                            </div>
+                            <div>
+                              <p className="font-medium">{record.employee}</p>
+                              <p className="text-sm text-muted-foreground">{record.employeeId}</p>
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell>{record.department}</TableCell>
+                        <TableCell>{record.position}</TableCell>
+                        <TableCell className="font-medium">{formatCurrency(record.basicSalary)}</TableCell>
+                        <TableCell className="font-medium">{formatCurrency(record.allowances)}</TableCell>
+                        <TableCell className="font-medium">{formatCurrency(record.overtime)}</TableCell>
+                        <TableCell className="font-medium">{formatCurrency(record.bonus)}</TableCell>
+                        <TableCell className="font-medium text-red-600">{formatCurrency(record.deductions)}</TableCell>
+                        <TableCell className="font-medium text-red-600">{formatCurrency(record.tax)}</TableCell>
+                        <TableCell className="font-medium text-red-600">{formatCurrency(record.pension)}</TableCell>
+                        <TableCell className="font-bold text-green-600">{formatCurrency(record.netPay)}</TableCell>
+                        <TableCell>
+                          <Badge className={getStatusColor(record.status)}>
+                            {getStatusIcon(record.status)}
+                            <span className="ml-1 capitalize">{record.status}</span>
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="font-mono text-sm">{record.bankAccount}</TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex items-center justify-end space-x-1">
+                            <Button variant="outline" size="sm">
+                              <FileText className="h-4 w-4" />
+                            </Button>
+                            <Button variant="outline" size="sm">
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                            {record.status === "approved" && (
+                              <Button size="sm">
+                                <CreditCard className="h-4 w-4" />
+                              </Button>
+                            )}
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         <TabsContent value="benefits" className="space-y-4">
@@ -399,48 +422,58 @@ export default function PayrollPage() {
               <CardDescription>Breakdown of benefits and allowances by employee</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-6">
-                {benefitsData.map((benefit, index) => (
-                  <div key={index} className="border rounded-lg p-4">
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                          <span className="text-blue-600 font-medium">
-                            {benefit.employee.split(' ').map(n => n[0]).join('')}
-                          </span>
-                        </div>
-                        <div>
-                          <h3 className="font-medium">{benefit.employee}</h3>
-                          <p className="text-sm text-muted-foreground">
-                            Total Benefits: {formatCurrency(benefit.totalBenefits)}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                      <div>
-                        <p className="text-sm text-muted-foreground">Health Insurance</p>
-                        <p className="font-medium">{formatCurrency(benefit.healthInsurance)}</p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-muted-foreground">Pension</p>
-                        <p className="font-medium">{formatCurrency(benefit.pensionContrib)}</p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-muted-foreground">Life Insurance</p>
-                        <p className="font-medium">{formatCurrency(benefit.lifeInsurance)}</p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-muted-foreground">Transport</p>
-                        <p className="font-medium">{formatCurrency(benefit.transportAllowance)}</p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-muted-foreground">Meal Allowance</p>
-                        <p className="font-medium">{formatCurrency(benefit.mealAllowance)}</p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Employee</TableHead>
+                      <TableHead>Department</TableHead>
+                      <TableHead>Health Insurance</TableHead>
+                      <TableHead>Pension Contribution</TableHead>
+                      <TableHead>Life Insurance</TableHead>
+                      <TableHead>Transport Allowance</TableHead>
+                      <TableHead>Meal Allowance</TableHead>
+                      <TableHead>Total Benefits</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {benefitsData.map((benefit, index) => (
+                      <TableRow key={index}>
+                        <TableCell>
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                              <span className="text-blue-600 text-sm font-medium">
+                                {benefit.employee.split(' ').map(n => n[0]).join('')}
+                              </span>
+                            </div>
+                            <div>
+                              <p className="font-medium">{benefit.employee}</p>
+                              <p className="text-sm text-muted-foreground">{benefit.employeeId}</p>
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell>{benefit.department}</TableCell>
+                        <TableCell className="font-medium">{formatCurrency(benefit.healthInsurance)}</TableCell>
+                        <TableCell className="font-medium">{formatCurrency(benefit.pensionContrib)}</TableCell>
+                        <TableCell className="font-medium">{formatCurrency(benefit.lifeInsurance)}</TableCell>
+                        <TableCell className="font-medium">{formatCurrency(benefit.transportAllowance)}</TableCell>
+                        <TableCell className="font-medium">{formatCurrency(benefit.mealAllowance)}</TableCell>
+                        <TableCell className="font-bold text-green-600">{formatCurrency(benefit.totalBenefits)}</TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex items-center justify-end space-x-1">
+                            <Button variant="outline" size="sm">
+                              <FileText className="h-4 w-4" />
+                            </Button>
+                            <Button variant="outline" size="sm">
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
               </div>
             </CardContent>
           </Card>

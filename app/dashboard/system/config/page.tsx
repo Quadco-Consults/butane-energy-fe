@@ -7,7 +7,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { designSystem } from "@/lib/design-system";
 import {
   Settings,
   Database,
@@ -32,8 +31,8 @@ export default function SystemConfigPage() {
       <div className="space-y-6">
         {/* Page Header */}
         <div>
-          <h1 className={designSystem.getHeading("h1")}>System Configuration</h1>
-          <p className={designSystem.getBody("small")}>
+          <h1 className="text-3xl font-bold text-gray-900">System Configuration</h1>
+          <p className="text-gray-600 mt-2">
             Configure system settings, preferences, and operational parameters
           </p>
         </div>
