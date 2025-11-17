@@ -486,9 +486,11 @@ export default function DashboardLayout({
             <DropdownMenuContent align="end" className="w-56">
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <Icons.Settings className="mr-2 h-4 w-4" />
-                Icons.Settings
+              <DropdownMenuItem asChild>
+                <Link href="/dashboard/profile" className="flex items-center w-full">
+                  <Icons.User className="mr-2 h-4 w-4" />
+                  My Profile
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem

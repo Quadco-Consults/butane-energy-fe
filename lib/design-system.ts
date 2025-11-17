@@ -151,28 +151,28 @@ export const colors = {
   // Butane Energy Brand Colors (Primary Palette)
   brand: {
     primary: {
-      50: "oklch(0.95 0.03 160)",   // Very light green
-      100: "oklch(0.90 0.06 160)",  // Light green
-      200: "oklch(0.80 0.08 160)",  // Medium light green
-      300: "oklch(0.70 0.10 160)",  // Medium green
-      400: "oklch(0.55 0.12 160)",  // Balanced green
-      500: "oklch(0.39 0.15 160)",  // Primary brand green
-      600: "oklch(0.32 0.18 160)",  // Dark green
-      700: "oklch(0.25 0.20 160)",  // Darker green
-      800: "oklch(0.18 0.22 160)",  // Very dark green
-      900: "oklch(0.12 0.25 160)",  // Deepest green
+      50: "oklch(0.95 0.05 15)",    // Very light red
+      100: "oklch(0.90 0.08 15)",   // Light red
+      200: "oklch(0.85 0.12 15)",   // Medium light red
+      300: "oklch(0.75 0.16 15)",   // Medium red
+      400: "oklch(0.65 0.20 15)",   // Balanced red
+      500: "oklch(0.60 0.22 15)",   // Primary brand red (logo flame)
+      600: "oklch(0.55 0.24 15)",   // Dark red
+      700: "oklch(0.45 0.26 15)",   // Darker red
+      800: "oklch(0.35 0.28 15)",   // Very dark red
+      900: "oklch(0.25 0.30 15)",   // Deepest red
     },
     secondary: {
-      50: "oklch(0.95 0.03 250)",   // Very light blue
-      100: "oklch(0.88 0.08 250)",  // Light blue
-      200: "oklch(0.78 0.12 250)",  // Medium light blue
-      300: "oklch(0.65 0.15 250)",  // Medium blue
-      400: "oklch(0.55 0.17 250)",  // Balanced blue
-      500: "oklch(0.45 0.18 250)",  // Primary brand blue
-      600: "oklch(0.38 0.20 250)",  // Dark blue
-      700: "oklch(0.30 0.22 250)",  // Darker blue
-      800: "oklch(0.22 0.24 250)",  // Very dark blue
-      900: "oklch(0.15 0.26 250)",  // Deepest blue
+      50: "oklch(0.95 0.03 275)",   // Very light purple
+      100: "oklch(0.88 0.08 275)",  // Light purple
+      200: "oklch(0.78 0.12 275)",  // Medium light purple
+      300: "oklch(0.65 0.15 275)",  // Medium purple
+      400: "oklch(0.55 0.17 275)",  // Balanced purple
+      500: "oklch(0.45 0.18 275)",  // Primary brand purple (logo circle/E)
+      600: "oklch(0.38 0.20 275)",  // Dark purple
+      700: "oklch(0.30 0.22 275)",  // Darker purple
+      800: "oklch(0.22 0.24 275)",  // Very dark purple
+      900: "oklch(0.15 0.26 275)",  // Deepest purple
     },
     accent: {
       50: "oklch(0.95 0.05 30)",    // Very light orange
@@ -257,11 +257,11 @@ export const colors = {
       icon: "text-blue-600",
     },
     procurement: {
-      primary: "bg-green-600",
-      light: "bg-green-50",
-      border: "border-green-200",
-      text: "text-green-800",
-      icon: "text-green-600",
+      primary: "bg-red-600",
+      light: "bg-red-50",
+      border: "border-red-200",
+      text: "text-red-800",
+      icon: "text-red-600",
     },
     hr: {
       primary: "bg-purple-600",
@@ -309,12 +309,12 @@ export const colors = {
 
   // Enterprise Data Visualization Colors
   charts: {
-    primary: ["oklch(0.39 0.15 160)", "oklch(0.45 0.18 250)", "oklch(0.65 0.22 30)"],
-    revenue: "oklch(0.39 0.15 160)",    // Green for revenue/profit
-    expense: "oklch(0.60 0.20 25)",     // Red for expenses/costs
+    primary: ["oklch(0.60 0.22 15)", "oklch(0.45 0.18 275)", "oklch(0.65 0.22 30)"],
+    revenue: "oklch(0.60 0.22 15)",     // Red for revenue/profit
+    expense: "oklch(0.45 0.18 275)",    // Purple for expenses/costs
     neutral: "oklch(0.60 0.05 240)",    // Blue-gray for neutral data
-    growth: "oklch(0.45 0.18 140)",     // Green for growth/positive
-    decline: "oklch(0.55 0.20 25)",     // Red for decline/negative
+    growth: "oklch(0.60 0.22 15)",      // Red for growth/positive
+    decline: "oklch(0.45 0.18 275)",    // Purple for decline/negative
   }
 };
 
@@ -416,8 +416,8 @@ export const componentVariants = {
   badge: {
     // Request statuses
     pending: "bg-amber-100 text-amber-800 border border-amber-200 rounded-full",
-    approved: "bg-green-100 text-green-800 border border-green-200 rounded-full",
-    rejected: "bg-red-100 text-red-800 border border-red-200 rounded-full",
+    approved: "bg-red-100 text-red-800 border border-red-200 rounded-full",
+    rejected: "bg-purple-100 text-purple-800 border border-purple-200 rounded-full",
     draft: "bg-gray-100 text-gray-700 border border-gray-200 rounded-full",
 
     // Activity statuses
@@ -428,13 +428,13 @@ export const componentVariants = {
     urgent: "bg-red-100 text-red-800 border border-red-200 rounded-full animate-pulse",
     high: "bg-orange-100 text-orange-800 border border-orange-200 rounded-full",
     medium: "bg-yellow-100 text-yellow-800 border border-yellow-200 rounded-full",
-    low: "bg-green-100 text-green-800 border border-green-200 rounded-full",
+    low: "bg-purple-100 text-purple-800 border border-purple-200 rounded-full",
 
     // Department badges
     finance: "bg-blue-100 text-blue-800 border border-blue-200 rounded-full",
     hr: "bg-purple-100 text-purple-800 border border-purple-200 rounded-full",
     operations: "bg-orange-100 text-orange-800 border border-orange-200 rounded-full",
-    procurement: "bg-green-100 text-green-800 border border-green-200 rounded-full",
+    procurement: "bg-red-100 text-red-800 border border-red-200 rounded-full",
     it: "bg-indigo-100 text-indigo-800 border border-indigo-200 rounded-full",
   },
 
