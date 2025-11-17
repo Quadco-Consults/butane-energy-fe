@@ -29,46 +29,31 @@ import { getAuthorizedNavigation } from "@/lib/filters";
 // Department Menu Structure
 const departmentMenus = [
   {
-    name: "Procurement",
-    icon: Icons.ClipboardCheck,
-    permission: "create_purchase_requests" as const,
-    department: "procurement",
+    name: "TDU",
+    icon: Icons.Zap,
+    permission: "manage_tdu_operations" as const,
+    department: "tdu",
     subItems: [
-      { name: "Procurement Dashboard", href: "/dashboard/procurement", icon: Icons.LayoutDashboard },
-
-      // SAP MM Core Process Flow (P2P Cycle)
-      { name: "Purchase Requisitions (PR)", href: "/dashboard/procurement/purchase-requisitions", icon: Icons.FileEdit },
-      { name: "Purchase Orders (PO)", href: "/dashboard/procurement/purchase-orders", icon: Icons.ShoppingCart },
-      { name: "Goods Receipts (GR)", href: "/dashboard/procurement/goods-receipts", icon: Icons.Package },
-      { name: "Invoice Verification (IV)", href: "/dashboard/procurement/invoice-verification", icon: Icons.Calculator },
-
-      // Vendor & Contract Management
-      { name: "Vendor Master", href: "/dashboard/procurement/vendors", icon: Icons.Users },
-      { name: "Contract Management", href: "/dashboard/procurement/contracts", icon: Icons.Handshake },
-
-      // Supporting Processes
-      { name: "Three-Way Matching", href: "/dashboard/procurement/three-way-matching", icon: Icons.GitBranch },
-      { name: "RFQ Management", href: "/dashboard/procurement/rfq", icon: Icons.Search },
-      { name: "Tenders", href: "/dashboard/procurement/tenders", icon: Icons.FileText },
-
-      // Analytics & Automation
-      { name: "Procurement Analytics", href: "/dashboard/procurement/analytics", icon: Icons.BarChart3 },
-      { name: "Workflow Automation", href: "/dashboard/procurement/workflow-automation", icon: Icons.Workflow },
-      { name: "Reports", href: "/dashboard/procurement/reports", icon: Icons.FileSpreadsheet },
+      { name: "TDU Dashboard", href: "/dashboard/tdu", icon: Icons.LayoutDashboard },
+      { name: "Orders", href: "/dashboard/tdu/orders", icon: Icons.ShoppingCart },
+      { name: "Revenue", href: "/dashboard/tdu/revenue", icon: Icons.DollarSign },
+      { name: "Logistics", href: "/dashboard/tdu/logistics", icon: Icons.Truck },
+      { name: "Customer Dashboard", href: "/dashboard/tdu/customers", icon: Icons.Users },
+      { name: "Report", href: "/dashboard/tdu/reports", icon: Icons.FileText },
     ]
   },
   {
-    name: "PDU",
-    icon: Icons.FolderOpen,
-    permission: "manage_pdu_operations" as const,
-    department: "pdu",
+    name: "Logistics",
+    icon: Icons.Truck,
+    permission: "manage_logistics" as const,
+    department: "logistics",
     subItems: [
-      { name: "PDU Dashboard", href: "/dashboard/pdu", icon: Icons.LayoutDashboard },
-      { name: "Projects", href: "/dashboard/pdu/projects", icon: Icons.Folder },
-      { name: "Planning", href: "/dashboard/pdu/planning", icon: Icons.Calendar },
-      { name: "Tracking", href: "/dashboard/pdu/tracking", icon: Icons.MapPin },
-      { name: "Reports", href: "/dashboard/pdu/reports", icon: Icons.FileText },
-      { name: "Permits/Licenses", href: "/dashboard/pdu/permits", icon: Icons.Shield },
+      { name: "Logistics Dashboard", href: "/dashboard/logistics", icon: Icons.LayoutDashboard },
+      { name: "Product Purchase", href: "/dashboard/logistics/product-purchase", icon: Icons.ShoppingBag },
+      { name: "Fuel", href: "/dashboard/logistics/fuel", icon: Icons.Fuel },
+      { name: "Trips", href: "/dashboard/logistics/trips", icon: Icons.MapPin },
+      { name: "Repairs & Maintenance", href: "/dashboard/logistics/maintenance", icon: Icons.Wrench },
+      { name: "Stock Management", href: "/dashboard/logistics/stock", icon: Icons.Package },
     ]
   },
   {
@@ -78,6 +63,20 @@ const departmentMenus = [
     department: "admin",
     subItems: [
       { name: "Admin Dashboard", href: "/dashboard/admin", icon: Icons.LayoutDashboard },
+
+      // Procurement section under Admin
+      { name: "Procurement Dashboard", href: "/dashboard/admin/procurement", icon: Icons.ClipboardCheck },
+      { name: "Purchase Requisitions (PR)", href: "/dashboard/admin/procurement/purchase-requisitions", icon: Icons.FileEdit },
+      { name: "Purchase Orders (PO)", href: "/dashboard/admin/procurement/purchase-orders", icon: Icons.ShoppingCart },
+      { name: "Goods Receipts (GR)", href: "/dashboard/admin/procurement/goods-receipts", icon: Icons.Package },
+      { name: "Invoice Verification (IV)", href: "/dashboard/admin/procurement/invoice-verification", icon: Icons.Calculator },
+      { name: "Vendor Master", href: "/dashboard/admin/procurement/vendors", icon: Icons.Users },
+      { name: "Contract Management", href: "/dashboard/admin/procurement/contracts", icon: Icons.Handshake },
+      { name: "Three-Way Matching", href: "/dashboard/admin/procurement/three-way-matching", icon: Icons.GitBranch },
+      { name: "RFQ Management", href: "/dashboard/admin/procurement/rfq", icon: Icons.Search },
+      { name: "Tenders", href: "/dashboard/admin/procurement/tenders", icon: Icons.FileText },
+
+      // General Admin functions
       { name: "Inventory", href: "/dashboard/admin/inventory", icon: Icons.Package },
       { name: "Store", href: "/dashboard/admin/inventory/store", icon: Icons.Warehouse },
       { name: "Assets", href: "/dashboard/admin/inventory/assets", icon: Icons.HardDrive },
@@ -85,21 +84,6 @@ const departmentMenus = [
       { name: "Office Maintenance", href: "/dashboard/admin/maintenance", icon: Icons.Wrench },
       { name: "Facility Management", href: "/dashboard/admin/facility", icon: Icons.Building2 },
       { name: "Service Orders", href: "/dashboard/admin/service-orders", icon: Icons.Settings },
-    ]
-  },
-  {
-    name: "Operations",
-    icon: Icons.Package,
-    permission: "manage_inbound_operations" as const,
-    department: "operations",
-    subItems: [
-      { name: "Operations Dashboard", href: "/dashboard/operations", icon: Icons.LayoutDashboard },
-      { name: "Trading", href: "/dashboard/operations/trading", icon: Icons.TrendingUp },
-      { name: "Logistics", href: "/dashboard/operations/logistics", icon: Icons.Truck },
-      { name: "LPG Sales Process", href: "/dashboard/operations/trading/sales", icon: Icons.DollarSign },
-      { name: "Stock Management", href: "/dashboard/operations/trading/stock", icon: Icons.Package },
-      { name: "Truck Dispatching", href: "/dashboard/operations/logistics/offtake", icon: Icons.Truck },
-      { name: "Investigations", href: "/dashboard/investigations", icon: Icons.Search },
     ]
   },
   {
@@ -125,16 +109,12 @@ const departmentMenus = [
     department: "hr",
     subItems: [
       { name: "HR Dashboard", href: "/dashboard/hr", icon: Icons.LayoutDashboard },
-      { name: "PIM", href: "/dashboard/hr/pim", icon: Icons.Users },
-      { name: "Leave", href: "/dashboard/hr/leave", icon: Icons.Calendar },
-      { name: "Time & Attendance", href: "/dashboard/hr/time", icon: Icons.Clock },
+      { name: "Employee Relations", href: "/dashboard/hr/employee-relations", icon: Icons.Users },
       { name: "Recruitment", href: "/dashboard/hr/recruitment", icon: Icons.UserPlus },
-      { name: "My Info", href: "/dashboard/hr/my-info", icon: Icons.User },
-      { name: "Performance", href: "/dashboard/hr/performance", icon: Icons.Target },
-      { name: "Dashboard", href: "/dashboard/hr/analytics", icon: Icons.BarChart3 },
-      { name: "Directory", href: "/dashboard/hr/directory", icon: Icons.Book },
-      { name: "Maintenance", href: "/dashboard/hr/maintenance", icon: Icons.Settings },
-      { name: "Buzz", href: "/dashboard/hr/buzz", icon: Icons.MessageSquare },
+      { name: "Leave Management", href: "/dashboard/hr/leave", icon: Icons.Calendar },
+      { name: "Payroll", href: "/dashboard/hr/payroll", icon: Icons.CreditCard },
+      { name: "Training & Development", href: "/dashboard/hr/training", icon: Icons.GraduationCap },
+      { name: "Performance Management", href: "/dashboard/hr/performance", icon: Icons.Target },
     ]
   }
 ];
@@ -220,9 +200,9 @@ export default function DashboardLayout({
 
   return (
     <AuthGuard requireAuth={true}>
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background overflow-x-auto">
       {/* Sidebar */}
-      <aside className="fixed left-0 top-0 z-40 h-screen w-64 border-r bg-card">
+      <aside className="fixed left-0 top-0 z-40 h-screen w-64 border-r bg-card hidden lg:block">
         <div className="flex h-full flex-col">
           {/* Official Butane Energy Logo */}
           <div className="flex h-16 items-center border-b px-6">
@@ -396,13 +376,23 @@ export default function DashboardLayout({
       </aside>
 
       {/* Top Bar */}
-      <header className="fixed top-0 left-64 right-0 z-30 h-16 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="flex h-full items-center justify-between px-6">
+      <header className="fixed top-0 left-0 lg:left-64 right-0 z-30 h-16 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="flex h-full items-center justify-between px-4 lg:px-6">
           {/* Page Title */}
           <div className="flex items-center gap-4">
+            {/* Mobile menu button */}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="lg:hidden"
+              onClick={() => {/* TODO: Add mobile menu toggle */}}
+            >
+              <Icons.Menu className="h-5 w-5" />
+            </Button>
             <h2 className="text-lg font-semibold text-foreground">
               {pathname === "/dashboard" ? "Dashboard" :
-               pathname.includes("/inbound") ? "Inbound Operations" :
+               pathname.includes("/tdu") ? "TDU (Technical Delivery Unit)" :
+               pathname.includes("/logistics") ? "Logistics" :
                pathname.includes("/procurement") ? "Procurement" :
                pathname.includes("/projects") ? "Projects" :
                pathname.includes("/investigations") ? "Investigations" :
@@ -515,8 +505,12 @@ export default function DashboardLayout({
       </header>
 
       {/* Main Content */}
-      <main className="pl-64 pt-16">
-        <div className="container mx-auto p-6">{children}</div>
+      <main className="lg:pl-64 pt-16 min-h-screen bg-background">
+        <div className="w-full px-6 lg:px-8 xl:px-12 py-6 pb-12 min-h-[calc(100vh-4rem)] overflow-x-auto">
+          <div className="min-w-0 max-w-full">
+            {children}
+          </div>
+        </div>
       </main>
     </div>
     </AuthGuard>

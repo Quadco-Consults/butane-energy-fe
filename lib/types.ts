@@ -24,12 +24,13 @@ export type Permission =
   | 'manage_customers'
   | 'view_sales_reports'
 
-  // Operations
-  | 'manage_inbound_operations'
-  | 'approve_quality_checks'
-  | 'manage_trucks'
-  | 'view_operations_reports'
-  | 'handle_investigations'
+  // TDU (Technical Delivery Unit)
+  | 'manage_tdu_operations'
+  | 'manage_tdu_orders'
+  | 'view_tdu_revenue'
+  | 'manage_tdu_logistics'
+  | 'view_customer_dashboard'
+  | 'generate_tdu_reports'
 
   // Finance
   | 'view_financial_reports'
@@ -76,10 +77,16 @@ export type Permission =
   | 'view_market_data'
 
   // Logistics
+  | 'manage_logistics'
   | 'manage_fleet'
   | 'schedule_deliveries'
   | 'track_shipments'
   | 'manage_transportation'
+  | 'manage_product_purchase'
+  | 'manage_fuel'
+  | 'manage_trips'
+  | 'manage_vehicle_maintenance'
+  | 'manage_logistics_stock'
   | 'view_logistics_reports'
 
   // Admin
@@ -519,7 +526,7 @@ export interface KPIScore {
 
 // WORKFLOW ENGINE TYPES - Based on Operational Process Diagrams
 
-export type Department = 'procurement' | 'admin' | 'operations' | 'finance' | 'hr' | 'sales' | 'trading' | 'logistics';
+export type Department = 'procurement' | 'admin' | 'tdu' | 'finance' | 'hr' | 'sales' | 'trading' | 'logistics';
 export type ProcessType = 'inbound-operation' | 'procurement' | 'project-management' | 'sales-order' | 'leave-request' | 'loan-request' | 'travel-request' | 'payroll' | 'imprest';
 
 export interface WorkflowStep {

@@ -26,15 +26,16 @@ const MOCK_USERS: User[] = [
     lastName: 'Mohammed',
     email: 'ahmed.mohammed@butane-energy.com',
     employeeId: 'BE-001',
-    department: 'operations',
+    department: 'tdu',
     role: 'plant_manager',
     permissions: [
       'view_dashboard',
-      'manage_inbound_operations',
-      'approve_quality_checks',
-      'view_operations_reports',
-      'manage_trucks',
-      'handle_investigations'
+      'manage_tdu_operations',
+      'manage_tdu_orders',
+      'view_tdu_revenue',
+      'manage_tdu_logistics',
+      'view_customer_dashboard',
+      'generate_tdu_reports'
     ],
     plantAccess: ['plant-1'], // Kano Plant only
     isActive: true,
@@ -86,17 +87,18 @@ const MOCK_USERS: User[] = [
     lastName: 'Suleiman',
     email: 'bello.suleiman@butane-energy.com',
     employeeId: 'BE-004',
-    department: 'operations',
+    department: 'logistics',
     role: 'senior_staff',
     permissions: [
       'view_dashboard',
-      'manage_inbound_operations',
-      'manage_trucks',
-      'view_operations_reports',
-      'handle_investigations',
-      'approve_quality_checks'
+      'manage_logistics',
+      'manage_fleet',
+      'manage_trips',
+      'manage_vehicle_maintenance',
+      'manage_logistics_stock',
+      'view_logistics_reports'
     ],
-    plantAccess: ['plant-1'], // Kano Plant operations
+    plantAccess: ['plant-1'], // Kano Plant logistics
     isActive: true,
     createdAt: '2025-01-01T00:00:00Z'
   },
@@ -223,11 +225,12 @@ const MOCK_USERS: User[] = [
       'approve_orders',
       'manage_customers',
       'view_sales_reports',
-      'manage_inbound_operations',
-      'approve_quality_checks',
-      'manage_trucks',
-      'view_operations_reports',
-      'handle_investigations',
+      'manage_tdu_operations',
+      'manage_tdu_orders',
+      'view_tdu_revenue',
+      'manage_tdu_logistics',
+      'view_customer_dashboard',
+      'generate_tdu_reports',
       'view_financial_reports',
       'process_payments',
       'manage_budgets',
@@ -242,10 +245,16 @@ const MOCK_USERS: User[] = [
       'approve_trades',
       'manage_commodity_prices',
       'view_market_data',
+      'manage_logistics',
       'manage_fleet',
       'schedule_deliveries',
       'track_shipments',
       'manage_transportation',
+      'manage_product_purchase',
+      'manage_fuel',
+      'manage_trips',
+      'manage_vehicle_maintenance',
+      'manage_logistics_stock',
       'view_logistics_reports',
       'manage_employees',
       'process_payroll',
@@ -348,7 +357,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     // Admin department has access to most departments for coordination
     if (user.department === 'admin') {
-      return ['operations', 'sales', 'procurement', 'hr'].includes(department);
+      return ['tdu', 'sales', 'procurement', 'hr', 'logistics'].includes(department);
     }
 
     // Department heads can access related departments
@@ -357,11 +366,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         case 'finance':
           return ['procurement', 'sales', 'trading'].includes(department);
         case 'procurement':
-          return ['finance', 'operations'].includes(department);
-        case 'operations':
+          return ['finance', 'tdu'].includes(department);
+        case 'tdu':
           return ['logistics', 'procurement'].includes(department);
         case 'logistics':
-          return ['operations', 'trading'].includes(department);
+          return ['tdu', 'trading'].includes(department);
         case 'trading':
           return ['finance', 'logistics'].includes(department);
         case 'hr':

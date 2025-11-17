@@ -315,7 +315,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Stats Grid */}
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
           {stats.map((stat, index) => (
             <Link key={index} href={stat.href || '#'}>
               <Card className="hover:shadow-lg transition-shadow cursor-pointer">
@@ -340,7 +340,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Role-based Alert Widgets */}
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
           {/* PDU Project Alerts - For executives, project managers */}
           {(hasPermission('view_dashboard') || hasPermission('manage_projects')) && (
             <Card>
@@ -633,7 +633,7 @@ export default function DashboardPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid gap-4 md:grid-cols-3">
+              <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                 {plants.map((plant) => (
                   <div key={plant.id} className="border rounded-lg p-4">
                     <div className="flex items-start justify-between mb-2">

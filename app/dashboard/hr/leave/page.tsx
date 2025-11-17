@@ -1,528 +1,605 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import DashboardLayout from "@/components/DashboardLayout"
-import { useAuth } from "@/contexts/AuthContext"
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
-import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Textarea } from '@/components/ui/textarea'
-import { Calendar, Plus, Search, Filter, CheckCircle, XCircle, Clock, AlertTriangle, Download, FileText, User } from 'lucide-react'
+import { useState } from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Plus, Download, Clock, Calendar, CheckCircle, TrendingUp, XCircle, Circle, Eye } from "lucide-react";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from "recharts";
+import DashboardLayout from '@/components/DashboardLayout';
 
-export default function LeavePage() {
-  const { user } = useAuth()
-  const [searchTerm, setSearchTerm] = useState('')
-  const [selectedType, setSelectedType] = useState('all')
-  const [selectedStatus, setSelectedStatus] = useState('all')
-  const [isApplyLeaveOpen, setIsApplyLeaveOpen] = useState(false)
-
-  // Sample leave data
-  const leaveRequests = [
-    {
-      id: 'LR001',
-      employeeId: 'EMP001',
-      employeeName: 'Adebayo Johnson',
-      leaveType: 'Annual Leave',
-      startDate: '2024-12-20',
-      endDate: '2024-12-30',
-      days: 8,
-      status: 'Pending',
-      appliedDate: '2024-11-10',
-      reason: 'Year-end vacation with family',
-      approver: 'Emeka Nwosu',
-      comments: null
-    },
-    {
-      id: 'LR002',
-      employeeId: 'EMP002',
-      employeeName: 'Fatima Abdullahi',
-      leaveType: 'Sick Leave',
-      startDate: '2024-11-15',
-      endDate: '2024-11-17',
-      days: 3,
-      status: 'Approved',
-      appliedDate: '2024-11-14',
-      reason: 'Medical treatment',
-      approver: 'Sarah Ibrahim',
-      comments: 'Approved. Get well soon.'
-    },
-    {
-      id: 'LR003',
-      employeeId: 'EMP003',
-      employeeName: 'Chidi Okafor',
-      leaveType: 'Personal Leave',
-      startDate: '2024-11-25',
-      endDate: '2024-11-25',
-      days: 1,
-      status: 'Rejected',
-      appliedDate: '2024-11-20',
-      reason: 'Personal matters',
-      approver: 'Mohammed Ali',
-      comments: 'Need more advance notice for personal leave.'
-    },
-    {
-      id: 'LR004',
-      employeeId: 'EMP004',
-      employeeName: 'Aisha Bello',
-      leaveType: 'Maternity Leave',
-      startDate: '2024-12-01',
-      endDate: '2025-03-01',
-      days: 90,
-      status: 'Approved',
-      appliedDate: '2024-10-15',
-      reason: 'Maternity leave',
-      approver: 'Sarah Ibrahim',
-      comments: 'Congratulations! Approved as per company policy.'
-    }
-  ]
-
-  const leaveTypes = [
-    'Annual Leave',
-    'Sick Leave',
-    'Maternity Leave',
-    'Paternity Leave',
-    'Personal Leave',
-    'Emergency Leave',
-    'Bereavement Leave',
-    'Study Leave'
-  ]
-
-  const leaveBalances = {
-    'EMP001': { annual: 15, sick: 10, personal: 5 },
-    'EMP002': { annual: 20, sick: 8, personal: 3 },
-    'EMP003': { annual: 18, sick: 12, personal: 7 },
-    'EMP004': { annual: 22, sick: 15, personal: 2 }
+// Mock data
+const leaveRequests = [
+  {
+    id: "LR-001",
+    employee: "John Adeyemi",
+    employeeId: "EMP-001",
+    department: "TDU",
+    leaveType: "Annual Leave",
+    startDate: "2025-11-25",
+    endDate: "2025-11-29",
+    days: 5,
+    status: "pending",
+    reason: "Family vacation",
+    appliedDate: "2025-11-15",
+    approver: "Emeka Okafor",
+    balance: 18
+  },
+  {
+    id: "LR-002",
+    employee: "Sarah Okafor",
+    employeeId: "EMP-002",
+    department: "Logistics",
+    leaveType: "Sick Leave",
+    startDate: "2025-11-18",
+    endDate: "2025-11-20",
+    days: 3,
+    status: "approved",
+    reason: "Medical treatment",
+    appliedDate: "2025-11-16",
+    approver: "Grace Nneka",
+    balance: 7
+  },
+  {
+    id: "LR-003",
+    employee: "Ahmed Hassan",
+    employeeId: "EMP-003",
+    department: "Finance",
+    leaveType: "Maternity Leave",
+    startDate: "2025-12-01",
+    endDate: "2026-03-01",
+    days: 90,
+    status: "approved",
+    reason: "Maternity care",
+    appliedDate: "2025-10-15",
+    approver: "David Eze",
+    balance: 0
+  },
+  {
+    id: "LR-004",
+    employee: "Grace Nneka",
+    employeeId: "EMP-004",
+    department: "HR",
+    leaveType: "Emergency Leave",
+    startDate: "2025-11-17",
+    endDate: "2025-11-17",
+    days: 1,
+    status: "rejected",
+    reason: "Personal emergency",
+    appliedDate: "2025-11-17",
+    approver: "David Eze",
+    balance: 2
   }
+];
+
+const leaveBalances = [
+  {
+    employee: "John Adeyemi",
+    employeeId: "EMP-001",
+    department: "TDU",
+    annual: { allocated: 21, used: 3, remaining: 18 },
+    sick: { allocated: 10, used: 2, remaining: 8 },
+    maternity: { allocated: 90, used: 0, remaining: 90 },
+    emergency: { allocated: 3, used: 1, remaining: 2 }
+  },
+  {
+    employee: "Sarah Okafor",
+    employeeId: "EMP-002",
+    department: "Logistics",
+    annual: { allocated: 21, used: 8, remaining: 13 },
+    sick: { allocated: 10, used: 3, remaining: 7 },
+    maternity: { allocated: 90, used: 0, remaining: 90 },
+    emergency: { allocated: 3, used: 0, remaining: 3 }
+  },
+  {
+    employee: "Ahmed Hassan",
+    employeeId: "EMP-003",
+    department: "Finance",
+    annual: { allocated: 21, used: 5, remaining: 16 },
+    sick: { allocated: 10, used: 1, remaining: 9 },
+    maternity: { allocated: 90, used: 90, remaining: 0 },
+    emergency: { allocated: 3, used: 2, remaining: 1 }
+  },
+  {
+    employee: "Grace Nneka",
+    employeeId: "EMP-004",
+    department: "HR",
+    annual: { allocated: 21, used: 12, remaining: 9 },
+    sick: { allocated: 10, used: 4, remaining: 6 },
+    maternity: { allocated: 90, used: 0, remaining: 90 },
+    emergency: { allocated: 3, used: 1, remaining: 2 }
+  }
+];
+
+const leaveCalendar = [
+  {
+    date: "2025-11-18",
+    employee: "Sarah Okafor",
+    type: "Sick Leave",
+    status: "approved"
+  },
+  {
+    date: "2025-11-19",
+    employee: "Sarah Okafor",
+    type: "Sick Leave",
+    status: "approved"
+  },
+  {
+    date: "2025-11-20",
+    employee: "Sarah Okafor",
+    type: "Sick Leave",
+    status: "approved"
+  },
+  {
+    date: "2025-11-25",
+    employee: "John Adeyemi",
+    type: "Annual Leave",
+    status: "pending"
+  },
+  {
+    date: "2025-12-01",
+    employee: "Ahmed Hassan",
+    type: "Maternity Leave",
+    status: "approved"
+  }
+];
+
+const leaveStatistics = [
+  { month: "Jan", annual: 45, sick: 12, emergency: 3, maternity: 2 },
+  { month: "Feb", annual: 38, sick: 15, emergency: 5, maternity: 1 },
+  { month: "Mar", annual: 52, sick: 8, emergency: 2, maternity: 3 },
+  { month: "Apr", annual: 41, sick: 18, emergency: 7, maternity: 2 },
+  { month: "May", annual: 35, sick: 10, emergency: 4, maternity: 1 },
+  { month: "Jun", annual: 48, sick: 14, emergency: 6, maternity: 2 }
+];
+
+const leaveTypeDistribution = [
+  { name: "Annual Leave", value: 65, color: "#10B981" },
+  { name: "Sick Leave", value: 20, color: "#EF4444" },
+  { name: "Maternity", value: 10, color: "#8B5CF6" },
+  { name: "Emergency", value: 5, color: "#F59E0B" }
+];
+
+const departmentLeaveUsage = [
+  { department: "TDU", usage: 68, allocated: 420, used: 285 },
+  { department: "Logistics", usage: 72, allocated: 315, used: 227 },
+  { department: "Finance", usage: 59, allocated: 210, used: 124 },
+  { department: "HR", usage: 81, allocated: 189, used: 153 },
+  { department: "Admin", usage: 45, allocated: 126, used: 57 }
+];
+
+export default function LeaveManagementPage() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [typeFilter, setTypeFilter] = useState("all");
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "approved": return "bg-green-100 text-green-800";
+      case "pending": return "bg-yellow-100 text-yellow-800";
+      case "rejected": return "bg-red-100 text-red-800";
+      case "cancelled": return "bg-gray-100 text-gray-800";
+      default: return "bg-gray-100 text-gray-800";
+    }
+  };
+
+  const getTypeColor = (type: string) => {
+    switch (type) {
+      case "Annual Leave": return "bg-blue-100 text-blue-800";
+      case "Sick Leave": return "bg-red-100 text-red-800";
+      case "Maternity Leave": return "bg-purple-100 text-purple-800";
+      case "Emergency Leave": return "bg-orange-100 text-orange-800";
+      default: return "bg-gray-100 text-gray-800";
+    }
+  };
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case "approved": return <CheckCircle className="h-4 w-4" />;
+      case "pending": return <Clock className="h-4 w-4" />;
+      case "rejected": return <XCircle className="h-4 w-4" />;
+      default: return <Circle className="h-4 w-4" />;
+    }
+  };
+
+  const getBalanceColor = (remaining: number, allocated: number) => {
+    const percentage = (remaining / allocated) * 100;
+    if (percentage > 50) return "text-green-600";
+    if (percentage > 20) return "text-yellow-600";
+    return "text-red-600";
+  };
 
   const filteredRequests = leaveRequests.filter(request => {
-    const matchesSearch = request.employeeName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         request.id.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesType = selectedType === 'all' || request.leaveType === selectedType
-    const matchesStatus = selectedStatus === 'all' || request.status === selectedStatus
-
-    return matchesSearch && matchesType && matchesStatus
-  })
-
-  const getStatusBadge = (status: string) => {
-    const variants: Record<string, { variant: "default" | "secondary" | "destructive" | "outline", icon: any }> = {
-      'Pending': { variant: 'outline', icon: Clock },
-      'Approved': { variant: 'default', icon: CheckCircle },
-      'Rejected': { variant: 'destructive', icon: XCircle }
-    }
-    return variants[status] || { variant: 'outline', icon: Clock }
-  }
-
-  const getStatusStats = () => {
-    const stats = {
-      total: leaveRequests.length,
-      pending: leaveRequests.filter(r => r.status === 'Pending').length,
-      approved: leaveRequests.filter(r => r.status === 'Approved').length,
-      rejected: leaveRequests.filter(r => r.status === 'Rejected').length
-    }
-    return stats
-  }
-
-  const stats = getStatusStats()
-
-  if (!user) return null
+    const matchesSearch = request.employee.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         request.leaveType.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = statusFilter === "all" || request.status === statusFilter;
+    const matchesType = typeFilter === "all" || request.leaveType === typeFilter;
+    return matchesSearch && matchesStatus && matchesType;
+  });
 
   return (
     <DashboardLayout>
-      <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="p-2 bg-orange-100 rounded-lg">
-                <Calendar className="h-6 w-6 text-orange-600" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">Leave Management</h1>
-                <p className="text-sm text-gray-600">Manage employee leave requests and balances</p>
-              </div>
-            </div>
-            <div className="flex items-center space-x-3">
-              <Button variant="outline" size="sm">
-                <Download className="h-4 w-4 mr-2" />
-                Export Report
-              </Button>
-              <Dialog open={isApplyLeaveOpen} onOpenChange={setIsApplyLeaveOpen}>
-                <DialogTrigger asChild>
-                  <Button className="bg-orange-600 hover:bg-orange-700">
-                    <Plus className="h-4 w-4 mr-2" />
-                    Apply Leave
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-2xl">
-                  <DialogHeader>
-                    <DialogTitle>Apply for Leave</DialogTitle>
-                    <DialogDescription>
-                      Submit a new leave request for approval.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="employee">Employee</Label>
-                        <Select>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select employee" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="EMP001">Adebayo Johnson</SelectItem>
-                            <SelectItem value="EMP002">Fatima Abdullahi</SelectItem>
-                            <SelectItem value="EMP003">Chidi Okafor</SelectItem>
-                            <SelectItem value="EMP004">Aisha Bello</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div>
-                        <Label htmlFor="leaveType">Leave Type</Label>
-                        <Select>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select leave type" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {leaveTypes.map(type => (
-                              <SelectItem key={type} value={type}>{type}</SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="startDate">Start Date</Label>
-                        <Input id="startDate" type="date" />
-                      </div>
-                      <div>
-                        <Label htmlFor="endDate">End Date</Label>
-                        <Input id="endDate" type="date" />
-                      </div>
-                    </div>
-                    <div>
-                      <Label htmlFor="reason">Reason</Label>
-                      <Textarea id="reason" placeholder="Please provide the reason for your leave request..." rows={3} />
-                    </div>
-                    <div>
-                      <Label htmlFor="attachments">Supporting Documents (optional)</Label>
-                      <Input id="attachments" type="file" multiple />
-                    </div>
-                    <div className="flex justify-end space-x-3">
-                      <Button variant="outline" onClick={() => setIsApplyLeaveOpen(false)}>
-                        Cancel
-                      </Button>
-                      <Button className="bg-orange-600 hover:bg-orange-700">
-                        Submit Application
-                      </Button>
-                    </div>
-                  </div>
-                </DialogContent>
-              </Dialog>
-            </div>
-          </div>
+      <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Leave Management</h1>
+          <p className="text-muted-foreground">Manage employee leave requests and balances</p>
+        </div>
+        <div className="flex items-center space-x-2">
+          <Button variant="outline">
+            <Download className="mr-2 h-4 w-4" />
+            Export Report
+          </Button>
+          <Button>
+            <Plus className="mr-2 h-4 w-4" />
+            New Leave Request
+          </Button>
         </div>
       </div>
 
-      {/* Stats */}
-      <div className="px-6 py-4 bg-white border-b border-gray-200">
-        <div className="grid grid-cols-4 gap-6">
-          <div className="flex items-center space-x-3">
-            <div className="p-2 bg-blue-100 rounded-lg">
-              <FileText className="h-5 w-5 text-blue-600" />
-            </div>
-            <div>
-              <p className="text-sm text-gray-600">Total Requests</p>
-              <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
-            </div>
-          </div>
-          <div className="flex items-center space-x-3">
-            <div className="p-2 bg-yellow-100 rounded-lg">
-              <Clock className="h-5 w-5 text-yellow-600" />
-            </div>
-            <div>
-              <p className="text-sm text-gray-600">Pending</p>
-              <p className="text-2xl font-bold text-yellow-600">{stats.pending}</p>
-            </div>
-          </div>
-          <div className="flex items-center space-x-3">
-            <div className="p-2 bg-green-100 rounded-lg">
-              <CheckCircle className="h-5 w-5 text-green-600" />
-            </div>
-            <div>
-              <p className="text-sm text-gray-600">Approved</p>
-              <p className="text-2xl font-bold text-green-600">{stats.approved}</p>
-            </div>
-          </div>
-          <div className="flex items-center space-x-3">
-            <div className="p-2 bg-red-100 rounded-lg">
-              <XCircle className="h-5 w-5 text-red-600" />
-            </div>
-            <div>
-              <p className="text-sm text-gray-600">Rejected</p>
-              <p className="text-2xl font-bold text-red-600">{stats.rejected}</p>
-            </div>
-          </div>
-        </div>
+      {/* Quick Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Pending Requests</CardTitle>
+            <Clock className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">8</div>
+            <p className="text-xs text-muted-foreground">Awaiting approval</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">This Month</CardTitle>
+            <Calendar className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">47</div>
+            <p className="text-xs text-muted-foreground">Leave days taken</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Approval Rate</CardTitle>
+            <CheckCircle className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">94.2%</div>
+            <p className="text-xs text-muted-foreground">+2.1% this quarter</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Avg Response Time</CardTitle>
+            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">1.8 days</div>
+            <p className="text-xs text-muted-foreground">-0.3 days improvement</p>
+          </CardContent>
+        </Card>
       </div>
 
-      {/* Filters */}
-      <div className="px-6 py-4 bg-white border-b border-gray-200">
-        <div className="flex items-center space-x-4">
-          <div className="flex-1 max-w-md">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+      <Tabs defaultValue="requests" className="space-y-4">
+        <TabsList>
+          <TabsTrigger value="requests">Leave Requests</TabsTrigger>
+          <TabsTrigger value="balances">Leave Balances</TabsTrigger>
+          <TabsTrigger value="calendar">Leave Calendar</TabsTrigger>
+          <TabsTrigger value="analytics">Analytics</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="requests" className="space-y-4">
+          {/* Filters */}
+          <div className="flex items-center space-x-4">
+            <div className="flex-1">
               <Input
-                placeholder="Search requests..."
+                placeholder="Search by employee name or leave type..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
+                className="max-w-sm"
               />
             </div>
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Filter by status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Statuses</SelectItem>
+                <SelectItem value="pending">Pending</SelectItem>
+                <SelectItem value="approved">Approved</SelectItem>
+                <SelectItem value="rejected">Rejected</SelectItem>
+                <SelectItem value="cancelled">Cancelled</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={typeFilter} onValueChange={setTypeFilter}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Filter by type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Types</SelectItem>
+                <SelectItem value="Annual Leave">Annual Leave</SelectItem>
+                <SelectItem value="Sick Leave">Sick Leave</SelectItem>
+                <SelectItem value="Maternity Leave">Maternity Leave</SelectItem>
+                <SelectItem value="Emergency Leave">Emergency Leave</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
-          <Select value={selectedType} onValueChange={setSelectedType}>
-            <SelectTrigger className="w-48">
-              <SelectValue placeholder="All Leave Types" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Leave Types</SelectItem>
-              {leaveTypes.map(type => (
-                <SelectItem key={type} value={type}>{type}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-            <SelectTrigger className="w-40">
-              <SelectValue placeholder="All Status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Status</SelectItem>
-              <SelectItem value="Pending">Pending</SelectItem>
-              <SelectItem value="Approved">Approved</SelectItem>
-              <SelectItem value="Rejected">Rejected</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
 
-      {/* Main Content */}
-      <div className="px-6 py-6">
-        <Tabs defaultValue="requests" className="space-y-6">
-          <TabsList>
-            <TabsTrigger value="requests">Leave Requests</TabsTrigger>
-            <TabsTrigger value="balances">Leave Balances</TabsTrigger>
-            <TabsTrigger value="calendar">Leave Calendar</TabsTrigger>
-            <TabsTrigger value="policies">Leave Policies</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="requests">
-            <Card>
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <CardTitle>Leave Requests</CardTitle>
-                    <CardDescription>
-                      {filteredRequests.length} of {leaveRequests.length} requests
-                    </CardDescription>
+          {/* Leave Requests */}
+          <div className="grid gap-4">
+            {filteredRequests.map((request) => (
+              <Card key={request.id}>
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-4">
+                      <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                        <span className="text-blue-600 font-medium">
+                          {request.employee.split(' ').map(n => n[0]).join('')}
+                        </span>
+                      </div>
+                      <div>
+                        <CardTitle className="text-lg">{request.employee}</CardTitle>
+                        <CardDescription>{request.department} • {request.employeeId}</CardDescription>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Badge className={getTypeColor(request.leaveType)}>
+                        {request.leaveType}
+                      </Badge>
+                      <Badge className={getStatusColor(request.status)}>
+                        {getStatusIcon(request.status)}
+                        <span className="ml-1 capitalize">{request.status}</span>
+                      </Badge>
+                    </div>
                   </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Request ID</TableHead>
-                      <TableHead>Employee</TableHead>
-                      <TableHead>Leave Type</TableHead>
-                      <TableHead>Duration</TableHead>
-                      <TableHead>Applied Date</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Approver</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredRequests.map((request) => {
-                      const statusInfo = getStatusBadge(request.status)
-                      const StatusIcon = statusInfo.icon
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                    <div>
+                      <p className="text-sm text-muted-foreground">Leave Dates</p>
+                      <p className="font-medium">{request.startDate} - {request.endDate}</p>
+                      <p className="text-sm text-muted-foreground">{request.days} days</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Applied Date</p>
+                      <p className="font-medium">{request.appliedDate}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Approver</p>
+                      <p className="font-medium">{request.approver}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Balance Remaining</p>
+                      <p className={`font-medium ${getBalanceColor(request.balance, 21)}`}>
+                        {request.balance} days
+                      </p>
+                    </div>
+                  </div>
+                  <div className="mb-4">
+                    <p className="text-sm text-muted-foreground">Reason</p>
+                    <p className="text-sm">{request.reason}</p>
+                  </div>
+                  <div className="flex items-center justify-end space-x-2">
+                    {request.status === "pending" && (
+                      <>
+                        <Button variant="outline" size="sm">
+                          <XCircle className="mr-2 h-4 w-4" />
+                          Reject
+                        </Button>
+                        <Button size="sm">
+                          <CheckCircle className="mr-2 h-4 w-4" />
+                          Approve
+                        </Button>
+                      </>
+                    )}
+                    <Button variant="ghost" size="sm">
+                      <Eye className="mr-2 h-4 w-4" />
+                      View Details
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </TabsContent>
 
-                      return (
-                        <TableRow key={request.id}>
-                          <TableCell>
-                            <div className="font-medium">{request.id}</div>
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex items-center space-x-3">
-                              <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center">
-                                <User className="h-4 w-4 text-orange-600" />
-                              </div>
-                              <div>
-                                <div className="font-medium text-gray-900">{request.employeeName}</div>
-                                <div className="text-sm text-gray-500">{request.employeeId}</div>
-                              </div>
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                              {request.leaveType}
-                            </span>
-                          </TableCell>
-                          <TableCell>
-                            <div>
-                              <div className="text-sm font-medium">{request.days} days</div>
-                              <div className="text-xs text-gray-500">
-                                {new Date(request.startDate).toLocaleDateString()} - {new Date(request.endDate).toLocaleDateString()}
-                              </div>
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            {new Date(request.appliedDate).toLocaleDateString()}
-                          </TableCell>
-                          <TableCell>
-                            <Badge variant={statusInfo.variant} className="flex items-center space-x-1">
-                              <StatusIcon className="h-3 w-3" />
-                              <span>{request.status}</span>
-                            </Badge>
-                          </TableCell>
-                          <TableCell>{request.approver}</TableCell>
-                          <TableCell className="text-right">
-                            <div className="flex items-center justify-end space-x-2">
-                              <Button variant="ghost" size="sm">View</Button>
-                              {request.status === 'Pending' && (
-                                <>
-                                  <Button variant="ghost" size="sm" className="text-green-600">
-                                    Approve
-                                  </Button>
-                                  <Button variant="ghost" size="sm" className="text-red-600">
-                                    Reject
-                                  </Button>
-                                </>
-                              )}
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      )
-                    })}
-                  </TableBody>
-                </Table>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="balances">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {Object.entries(leaveBalances).map(([empId, balances]) => {
-                const employee = leaveRequests.find(r => r.employeeId === empId)?.employeeName || empId
-                return (
-                  <Card key={empId}>
-                    <CardHeader>
-                      <CardTitle className="flex items-center space-x-2">
-                        <User className="h-5 w-5" />
-                        <span>{employee}</span>
-                      </CardTitle>
-                      <CardDescription>{empId}</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        <div className="flex justify-between items-center p-3 bg-blue-50 rounded-lg">
-                          <span className="font-medium text-blue-900">Annual Leave</span>
-                          <span className="text-2xl font-bold text-blue-600">{balances.annual}</span>
+        <TabsContent value="balances" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Employee Leave Balances</CardTitle>
+              <CardDescription>Current leave allocations and usage by employee</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-6">
+                {leaveBalances.map((balance, index) => (
+                  <div key={index} className="border rounded-lg p-4">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                          <span className="text-blue-600 font-medium">
+                            {balance.employee.split(' ').map(n => n[0]).join('')}
+                          </span>
                         </div>
-                        <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
-                          <span className="font-medium text-green-900">Sick Leave</span>
-                          <span className="text-2xl font-bold text-green-600">{balances.sick}</span>
-                        </div>
-                        <div className="flex justify-between items-center p-3 bg-purple-50 rounded-lg">
-                          <span className="font-medium text-purple-900">Personal Leave</span>
-                          <span className="text-2xl font-bold text-purple-600">{balances.personal}</span>
+                        <div>
+                          <h3 className="font-medium">{balance.employee}</h3>
+                          <p className="text-sm text-muted-foreground">{balance.department} • {balance.employeeId}</p>
                         </div>
                       </div>
-                    </CardContent>
-                  </Card>
-                )
-              })}
-            </div>
-          </TabsContent>
+                    </div>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                      <div>
+                        <p className="text-sm text-muted-foreground">Annual Leave</p>
+                        <p className={`font-medium ${getBalanceColor(balance.annual.remaining, balance.annual.allocated)}`}>
+                          {balance.annual.remaining}/{balance.annual.allocated}
+                        </p>
+                        <div className="w-full bg-gray-200 rounded-full h-1 mt-1">
+                          <div
+                            className="bg-blue-500 h-1 rounded-full"
+                            style={{ width: `${(balance.annual.used / balance.annual.allocated) * 100}%` }}
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">Sick Leave</p>
+                        <p className={`font-medium ${getBalanceColor(balance.sick.remaining, balance.sick.allocated)}`}>
+                          {balance.sick.remaining}/{balance.sick.allocated}
+                        </p>
+                        <div className="w-full bg-gray-200 rounded-full h-1 mt-1">
+                          <div
+                            className="bg-red-500 h-1 rounded-full"
+                            style={{ width: `${(balance.sick.used / balance.sick.allocated) * 100}%` }}
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">Maternity Leave</p>
+                        <p className={`font-medium ${getBalanceColor(balance.maternity.remaining, balance.maternity.allocated)}`}>
+                          {balance.maternity.remaining}/{balance.maternity.allocated}
+                        </p>
+                        <div className="w-full bg-gray-200 rounded-full h-1 mt-1">
+                          <div
+                            className="bg-purple-500 h-1 rounded-full"
+                            style={{ width: `${(balance.maternity.used / balance.maternity.allocated) * 100}%` }}
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">Emergency Leave</p>
+                        <p className={`font-medium ${getBalanceColor(balance.emergency.remaining, balance.emergency.allocated)}`}>
+                          {balance.emergency.remaining}/{balance.emergency.allocated}
+                        </p>
+                        <div className="w-full bg-gray-200 rounded-full h-1 mt-1">
+                          <div
+                            className="bg-orange-500 h-1 rounded-full"
+                            style={{ width: `${(balance.emergency.used / balance.emergency.allocated) * 100}%` }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
 
-          <TabsContent value="calendar">
+        <TabsContent value="calendar" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Leave Calendar</CardTitle>
+              <CardDescription>Overview of upcoming and recent leave schedules</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {leaveCalendar.map((leave, index) => (
+                  <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                    <div className="flex items-center space-x-4">
+                      <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                        <Calendar className="h-5 w-5 text-blue-600" />
+                      </div>
+                      <div>
+                        <p className="font-medium">{leave.employee}</p>
+                        <p className="text-sm text-muted-foreground">{leave.type}</p>
+                      </div>
+                    </div>
+                    <div className="text-center">
+                      <p className="font-medium">{leave.date}</p>
+                      <Badge className={getStatusColor(leave.status)}>
+                        {leave.status}
+                      </Badge>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="analytics" className="space-y-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
-                <CardTitle>Leave Calendar</CardTitle>
-                <CardDescription>Visual overview of scheduled leaves</CardDescription>
+                <CardTitle>Monthly Leave Trends</CardTitle>
+                <CardDescription>Leave usage by type over time</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="text-center py-12 text-gray-500">
-                  <Calendar className="h-12 w-12 mx-auto mb-4 text-gray-400" />
-                  <p>Calendar view will be implemented with a calendar component</p>
-                  <p className="text-sm">Showing all approved leaves and their duration</p>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={leaveStatistics}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="month" />
+                    <YAxis />
+                    <Tooltip />
+                    <Bar dataKey="annual" fill="#10B981" name="Annual" />
+                    <Bar dataKey="sick" fill="#EF4444" name="Sick" />
+                    <Bar dataKey="emergency" fill="#F59E0B" name="Emergency" />
+                    <Bar dataKey="maternity" fill="#8B5CF6" name="Maternity" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Leave Type Distribution</CardTitle>
+                <CardDescription>Breakdown by leave category</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie
+                      data={leaveTypeDistribution}
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={80}
+                      fill="#8884d8"
+                      dataKey="value"
+                      label
+                    >
+                      {leaveTypeDistribution.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Department Leave Usage</CardTitle>
+                <CardDescription>Leave utilization by department</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {departmentLeaveUsage.map((dept, index) => (
+                    <div key={index} className="flex items-center justify-between">
+                      <div>
+                        <p className="font-medium">{dept.department}</p>
+                        <p className="text-sm text-muted-foreground">{dept.used}/{dept.allocated} days used</p>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-32 bg-gray-200 rounded-full h-2">
+                          <div
+                            className="bg-blue-500 h-2 rounded-full"
+                            style={{ width: `${dept.usage}%` }}
+                          />
+                        </div>
+                        <span className="text-sm font-medium">{dept.usage}%</span>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
-
-          <TabsContent value="policies">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Leave Entitlements</CardTitle>
-                  <CardDescription>Annual leave allocations by role</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center p-3 border rounded-lg">
-                      <span>Senior Management</span>
-                      <span className="font-semibold">25 days</span>
-                    </div>
-                    <div className="flex justify-between items-center p-3 border rounded-lg">
-                      <span>Management</span>
-                      <span className="font-semibold">22 days</span>
-                    </div>
-                    <div className="flex justify-between items-center p-3 border rounded-lg">
-                      <span>Senior Staff</span>
-                      <span className="font-semibold">20 days</span>
-                    </div>
-                    <div className="flex justify-between items-center p-3 border rounded-lg">
-                      <span>Junior Staff</span>
-                      <span className="font-semibold">18 days</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Leave Policies</CardTitle>
-                  <CardDescription>Company leave policies and guidelines</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="p-3 border rounded-lg">
-                      <h4 className="font-semibold mb-2">Annual Leave</h4>
-                      <p className="text-sm text-gray-600">Must be requested at least 2 weeks in advance. Maximum 10 consecutive days without special approval.</p>
-                    </div>
-                    <div className="p-3 border rounded-lg">
-                      <h4 className="font-semibold mb-2">Sick Leave</h4>
-                      <p className="text-sm text-gray-600">Medical certificate required for absences exceeding 3 consecutive days.</p>
-                    </div>
-                    <div className="p-3 border rounded-lg">
-                      <h4 className="font-semibold mb-2">Maternity/Paternity Leave</h4>
-                      <p className="text-sm text-gray-600">As per Nigerian Labour Act - 12 weeks maternity, 2 weeks paternity.</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-        </Tabs>
+          </div>
+        </TabsContent>
+      </Tabs>
       </div>
-    </div>
     </DashboardLayout>
-  )
+  );
 }
