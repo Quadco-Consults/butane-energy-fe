@@ -814,3 +814,206 @@ export interface Investigation {
   createdAt: string;
   resolvedAt?: string;
 }
+
+// ========================================
+// POS SYSTEM TYPES
+// ========================================
+
+export interface POSTransaction extends Order {
+  // Enhanced order for POS operations
+  transactionType: 'sale' | 'exchange' | 'return' | 'bulk';
+  cashierId: string;
+  cashierName: string;
+  shiftId: string;
+  tillNumber?: string;
+  subTotal: number;
+  taxAmount: number;
+  discountAmount: number;
+  changeAmount?: number;
+  receiptNumber: string;
+  exchangeDetails?: CylinderExchangeDetails;
+  refillDetails?: CylinderRefillDetails;
+  bulkSaleDetails?: BulkLPGDetails;
+  loyaltyPoints?: number;
+  printedAt?: string;
+}
+
+export interface CylinderExchangeDetails {
+  returnedCylinderId: string;
+  returnedCylinderSize: '12.5kg' | '6.25kg';
+  returnedCylinderCondition: 'empty' | 'partial' | 'damaged';
+  newCylinderId: string;
+  exchangeCredit: number;
+  exchangeFee: number;
+}
+
+export interface CylinderRefillDetails {
+  cylinderType: string;
+  cylinderCapacity: number;
+  cylinderCondition: 'good' | 'fair' | 'needs_inspection';
+  emptyWeight: number;
+  filledWeight: number;
+  gasWeight: number;
+  pricePerKg: number;
+  totalPrice: number;
+  safetyCheck: boolean;
+  valveCheck: boolean;
+  leakTest: boolean;
+  operatorId: string;
+}
+
+export interface BulkLPGDetails {
+  containerType: 'customer_tank' | 'truck' | 'cylinder_bulk';
+  tareWeight?: number;
+  grossWeight?: number;
+  netWeight: number;
+  pricePerKg: number;
+  minimumCharge?: number;
+}
+
+export interface POSShift {
+  id: string;
+  shiftNumber: string;
+  cashierId: string;
+  cashierName: string;
+  plantId: string;
+  tillNumber: string;
+  startTime: string;
+  endTime?: string;
+  status: 'open' | 'closed';
+  startingCash: number;
+  endingCash?: number;
+  totalSales: number;
+  totalTransactions: number;
+  cashSales: number;
+  cardSales: number;
+  transferSales: number;
+  creditSales: number;
+  refunds: number;
+  voids: number;
+  overShort: number; // Cash difference (+ over, - short)
+  deposits?: number;
+  withdrawals?: number;
+  notes?: string;
+}
+
+export interface POSProduct extends Product {
+  // Enhanced product for POS operations
+  posCategory: 'cylinder' | 'bulk_lpg' | 'accessory' | 'safety' | 'service';
+  touchOrderPosition: number; // Position in POS grid
+  quickSaleQuantity: number; // Default quantity for quick sale
+  ageRestricted: boolean;
+  requiresWeighing: boolean;
+  allowsExchange: boolean;
+  bulkPricing?: BulkPricingTier[];
+  promotions?: ActivePromotion[];
+  barcode?: string;
+  image?: string;
+}
+
+export interface BulkPricingTier {
+  minQuantity: number;
+  maxQuantity?: number;
+  pricePerUnit: number;
+  discountPercentage?: number;
+}
+
+export interface ActivePromotion {
+  id: string;
+  name: string;
+  type: 'percentage' | 'fixed_amount' | 'buy_x_get_y' | 'bulk_discount';
+  value: number;
+  minQuantity?: number;
+  maxQuantity?: number;
+  startDate: string;
+  endDate: string;
+  applicableProducts: string[];
+  requiresCombo?: string[]; // Product IDs that must be purchased together
+  description: string;
+}
+
+export interface CustomerAccount extends Customer {
+  // Enhanced customer for POS operations
+  accountType: 'walk_in' | 'regular' | 'corporate' | 'prepaid';
+  creditLimit: number;
+  currentBalance: number;
+  paymentTerms: string;
+  lastPurchaseDate?: string;
+  totalPurchases: number;
+  loyaltyPoints: number;
+  loyaltyTier: 'bronze' | 'silver' | 'gold' | 'platinum';
+  preferredPaymentMethod: 'cash' | 'card' | 'transfer' | 'credit';
+  cylindersOnLoan: CylinderLoan[];
+}
+
+export interface CylinderLoan {
+  cylinderId: string;
+  cylinderSize: '12.5kg' | '6.25kg';
+  loanDate: string;
+  depositAmount: number;
+  returnDate?: string;
+  status: 'active' | 'returned' | 'lost';
+}
+
+export interface POSPayment {
+  id: string;
+  transactionId: string;
+  method: 'cash' | 'card' | 'transfer' | 'credit';
+  amount: number;
+  reference?: string; // Card auth code, transfer reference, etc.
+  cardType?: 'debit' | 'credit';
+  cardLastFour?: string;
+  authCode?: string;
+  splitPayment?: boolean;
+  changeGiven?: number;
+  status: 'pending' | 'completed' | 'failed' | 'voided';
+  processedAt: string;
+}
+
+export interface POSDashboardStats extends DashboardStats {
+  // Enhanced dashboard for POS operations
+  todaysSales: number;
+  todaysTransactions: number;
+  averageTransactionValue: number;
+  topSellingProduct: string;
+  busyHours: { hour: number; sales: number }[];
+  paymentMethodBreakdown: {
+    cash: number;
+    card: number;
+    transfer: number;
+    credit: number;
+  };
+  customerTypeBreakdown: {
+    walkIn: number;
+    regular: number;
+    corporate: number;
+  };
+  openShifts: number;
+  lowStockAlerts: number;
+}
+
+export interface InventoryAlert {
+  id: string;
+  productId: string;
+  productName: string;
+  currentStock: number;
+  reorderLevel: number;
+  urgency: 'low' | 'medium' | 'high' | 'critical';
+  estimatedDaysLeft: number;
+  autoReorderEnabled: boolean;
+  lastOrderDate?: string;
+  suggestedOrderQuantity: number;
+  createdAt: string;
+}
+
+export interface AgeVerification {
+  transactionId: string;
+  customerId?: string;
+  verificationMethod: 'id_scan' | 'manual_entry' | 'known_customer';
+  dateOfBirth: string;
+  idType?: 'drivers_license' | 'national_id' | 'passport' | 'voters_card';
+  idNumber?: string;
+  verifiedBy: string;
+  verifiedAt: string;
+  products: string[]; // Product IDs requiring verification
+}

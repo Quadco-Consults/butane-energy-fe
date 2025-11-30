@@ -35,7 +35,11 @@ const MOCK_USERS: User[] = [
       'view_tdu_revenue',
       'manage_tdu_logistics',
       'view_customer_dashboard',
-      'generate_tdu_reports'
+      'generate_tdu_reports',
+      'create_orders',
+      'view_orders',
+      'edit_orders',
+      'manage_customers'
     ],
     plantAccess: ['plant-1'], // Kano Plant only
     isActive: true,

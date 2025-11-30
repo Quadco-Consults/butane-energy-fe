@@ -1,6 +1,7 @@
 'use client';
 
 import DashboardLayout from '@/components/DashboardLayout';
+import { TankVisualization } from '@/components/dashboard/TankVisualization';
 import { useERP } from '@/contexts/ERPContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -584,6 +585,43 @@ export default function DashboardPage() {
             </Card>
           )}
         </div>
+
+        {/* Tank Visualization - Show for Sales, Operations, and Executive users */}
+        {(hasPermission('view_dashboard') || user?.department === 'sales' || user?.department === 'operations' || user?.role === 'manager') && (
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="flex items-center gap-2">
+                    <Package className="h-5 w-5 text-blue-500" />
+                    LPG Tank Monitoring & Inventory
+                  </CardTitle>
+                  <CardDescription>
+                    Real-time LPG tank levels with live depletion as sales occur
+                  </CardDescription>
+                </div>
+                <Link href="/dashboard/pos">
+                  <Button size="sm" className="gap-2">
+                    <DollarSign className="h-4 w-4" />
+                    Open POS System
+                  </Button>
+                </Link>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <TankVisualization
+                onSale={(tankId, amount) => {
+                  console.log(`Sale recorded: ${amount} units from ${tankId}`);
+                  // In a real app, this would update sales records
+                }}
+                showControls={user?.role === 'admin' || user?.role === 'manager'}
+                userRole={user?.role}
+                userDepartment={user?.department}
+                currentLocation={user?.plantAccess?.[0]}
+              />
+            </CardContent>
+          </Card>
+        )}
 
         {/* Recent Activity Feed - For all users */}
         <Card>

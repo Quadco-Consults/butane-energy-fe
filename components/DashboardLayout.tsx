@@ -43,6 +43,20 @@ const departmentMenus = [
     ]
   },
   {
+    name: "Sales",
+    icon: Icons.ShoppingCart,
+    permission: "create_orders" as const,
+    department: "sales",
+    subItems: [
+      { name: "Sales Dashboard", href: "/dashboard/sales", icon: Icons.LayoutDashboard },
+      { name: "Gas Station POS", href: "/dashboard/pos", icon: Icons.CreditCard },
+      { name: "Customer Management", href: "/dashboard/sales/customers", icon: Icons.Users },
+      { name: "Sales Orders", href: "/dashboard/sales/orders", icon: Icons.ShoppingBag },
+      { name: "Sales Reports", href: "/dashboard/sales/reports", icon: Icons.FileText },
+      { name: "Pricing Management", href: "/dashboard/sales/pricing", icon: Icons.DollarSign },
+    ]
+  },
+  {
     name: "Logistics",
     icon: Icons.Truck,
     permission: "manage_logistics" as const,
